@@ -151,8 +151,8 @@ const EditIncident = () => {
                 </div>
 
                 {/* Main content */}
-                <div className="main-content-incident">
-                    <div className="container mt-4">
+                <div className="main-content-incident-edit d-flex justify-content-center align-items-start">
+                    <div className="container" style={{ maxWidth: '80%' }}>
                         <h2 className="mb-4">Edit Incident</h2>
                         <form onSubmit={handleUpdate}>
                             <div className="form-group mb-3">
@@ -205,7 +205,7 @@ const EditIncident = () => {
                             {/* Map for selecting location */}
                             <div className="map-container mb-3">
                                 <label className="form-label">Select Location on Map</label>
-                                <MapContainer center={[incident.Latitude || 51.505, incident.Longitude || -0.09]} zoom={13} style={{ height: '50vh', width: '80%' }}>
+                                <MapContainer center={[incident.Latitude || 51.505, incident.Longitude || -0.09]} zoom={13} style={{ height: '50vh', width: '100%' }}>
                                     <TileLayer
                                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

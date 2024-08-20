@@ -1,43 +1,3 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
 html, body, #root {
   height: 100%;
   margin: 0;
@@ -46,20 +6,19 @@ html, body, #root {
 
 
 
-.d-flex-grow-1 {
-  display: flex;
-  flex-grow: 1;
-}
-
 .sidebar {
   width: 250px; /* Fixed width for sidebar */
   position: fixed;
   top: 56px; /* The height of the navbar */
-  bottom: 0; /* Make sidebar stretch to the bottom */
-  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtVgirL1e5Oj2jWsoGPNCiAfSQcB2ZzZ1Tdg&s');
-  background-size: cover;
+  bottom: 5%; /* Make sidebar stretch to the bottom */
+  background-image: url('./Image/accident.jpg');
+  background-size: cover; /* Resize the image to fit within the container */
+  background-repeat: no-repeat; /* Prevent repeating the image */
+  background-position: 30% 100%; /* Adjust position to align image */
   font-size: medium;
+  z-index: 1000; /* Ensure the sidebar is above other elements */
 }
+
 
 .sidebar .nav-link:hover {
   background-color: #0400ff; /* Changes color on hover */
@@ -75,65 +34,61 @@ html, body, #root {
   margin-left: 250px; /* Aligns content next to the sidebar */
   margin-top: 50px;
   padding: 20px; /* Padding for the main content area */
-  width: 100%; /* Ensures full width for the content area */
+  width:100%; /* Full width minus sidebar width */
   overflow-y: auto; /* Adds scroll to the content if it overflows */
   background-color: #f8f9fa; /* Light background color for main content */
 }
 
-.card {
-  margin-bottom: 20px; /* Space between cards */
-}
-
-
-.main-content-incident {
-  margin-left: 50px; /* Aligns content next to the sidebar */
-  margin-top: 50px;
-  padding: 20px; /* Padding for the main content area */
-  width: 100%; /* Ensures full width for the content area */
+.main-content-incident-edit {
+  margin-left:50px; /* Aligns content next to the sidebar */
+  margin-top: 100px;
+  padding:1px; /* Padding for the main content area */
+  width:80%; /* Full width minus sidebar width */
   overflow-y: auto; /* Adds scroll to the content if it overflows */
   background-color: #f8f9fa; /* Light background color for main content */
 }
 
-
-.main-content-hospital {
-  margin-left: 50px; /* Aligns content next to the sidebar */
-  margin-top: 50px;
-  padding: 20px; /* Padding for the main content area */
-  width: 100%; /* Ensures full width for the content area */
+.main-content-hospital-edit {
+  margin-left:50px; /* Aligns content next to the sidebar */
+  margin-top: 100px;
+  padding:1px; /* Padding for the main content area */
+  width:80%; /* Full width minus sidebar width */
   overflow-y: auto; /* Adds scroll to the content if it overflows */
   background-color: #f8f9fa; /* Light background color for main content */
 }
 
+.main-content-evacuation-center-edit{
+  margin-left:50px;
+  margin-top: 100px;
+  width: 50%;
+  background-color: #f8f9fa;
 
 
-.main-content-evacuation-center {
-  margin-left: 50px; /* Aligns content next to the sidebar */
-  margin-top: 50px;
-  padding: 20px; /* Padding for the main content area */
-  width: 100%; /* Ensures full width for the content area */
-  overflow-y: auto; /* Adds scroll to the content if it overflows */
-  background-color: #f8f9fa; /* Light background color for main content */
 }
 
-.map-container {
-  margin-left: 50px; /* Aligns content next to the sidebar */
-  margin-top: 50px;
-  padding: 20px; /* Padding for the main content area */
-  width: 100%; /* Ensures full width for the content area */
-  overflow-y: auto; /* Adds scroll to the content if it overflows */
-  background-color: #f8f9fa; /* Light background color for main content */
-}
-
+.main-content-incident,
+.main-content-hospital,
+.main-content-evacuation-center,
 .main-content-task {
-  margin-left: 50px; /* Aligns content next to the sidebar */
   margin-top: 50px;
   padding: 20px; /* Padding for the main content area */
-  width: 100%; /* Ensures full width for the content area */
+  width:100%; /* Full width minus sidebar width */
   overflow-y: auto; /* Adds scroll to the content if it overflows */
   background-color: #f8f9fa; /* Light background color for main content */
 }
 
+/* Ensure map-container does not overlap sidebar */
+.map-container {
+  margin-top: 50px;
+  margin-left: 100px;
+  padding: 20px; /* Padding for the main content area */
+  width:80%; /* Full width minus sidebar width */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+}
 
-
-
-
+/* Optional: Ensure that map does not extend beyond container */
+.map-container .leaflet-container {
+  height: 50vh; /* Ensure height is responsive */
+  width: 100%;
+}

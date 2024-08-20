@@ -118,7 +118,7 @@ const EditEvacuationCenter = () => {
                 </div>
 
                 {/* Main content */}
-                <div className="main-content-evacuation-center">
+                <div className="main-content-evacuation-center-edit">
                     <div className="container mt-4">
                         <h2 className="mb-4">Edit Evacuation Center</h2>
                         <form onSubmit={handleUpdate}>
