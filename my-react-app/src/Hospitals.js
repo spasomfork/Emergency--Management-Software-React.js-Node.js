@@ -121,8 +121,21 @@ const Hospital = () => {
           <div className="container mt-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h2>Hospitals</h2>
-              <Button variant="success" onClick={handleCreateCSV}>Add New Hospital by CSV Upload</Button>
-              <Button variant="success" onClick={handleCreate}>Add New Hospital</Button>
+              <div>
+                <Button 
+                  variant="success" 
+                  onClick={handleCreateCSV} 
+                  style={{ marginRight: '10px' }}
+                >
+                  Add New Hospital by CSV Upload
+                </Button>
+                <Button 
+                  variant="success" 
+                  onClick={handleCreate}
+                >
+                  Add New Hospital
+                </Button>
+              </div>
             </div>
             <table className="table table-striped">
               <thead>
