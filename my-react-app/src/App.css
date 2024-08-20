@@ -1,0 +1,137 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.d-flex-grow-1 {
+  display: flex;
+  flex-grow: 1;
+}
+
+.sidebar {
+  width: 250px; /* Fixed width for sidebar */
+  position: fixed;
+  top: 56px; /* The height of the navbar */
+  bottom: 0; /* Make sidebar stretch to the bottom */
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtVgirL1e5Oj2jWsoGPNCiAfSQcB2ZzZ1Tdg&s');
+  background-size: cover;
+  font-size: medium;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #0400ff; /* Changes color on hover */
+  text-decoration: none;
+}
+
+.sidebar .nav-item.active .nav-link {
+  background-color: #0400ff; /* Active link color */
+  font-weight: bold; /* Makes active link bold */
+}
+
+.main-content {
+  margin-left: 250px; /* Aligns content next to the sidebar */
+  margin-top: 50px;
+  padding: 20px; /* Padding for the main content area */
+  width: 100%; /* Ensures full width for the content area */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+}
+
+.card {
+  margin-bottom: 20px; /* Space between cards */
+}
+
+
+.main-content-incident {
+  margin-left: 50px; /* Aligns content next to the sidebar */
+  margin-top: 50px;
+  padding: 20px; /* Padding for the main content area */
+  width: 100%; /* Ensures full width for the content area */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+}
+
+
+.main-content-hospital {
+  margin-left: 50px; /* Aligns content next to the sidebar */
+  margin-top: 50px;
+  padding: 20px; /* Padding for the main content area */
+  width: 100%; /* Ensures full width for the content area */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+}
+
+
+
+.main-content-evacuation-center {
+  margin-left: 50px; /* Aligns content next to the sidebar */
+  margin-top: 50px;
+  padding: 20px; /* Padding for the main content area */
+  width: 100%; /* Ensures full width for the content area */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+}
+
+.map-container {
+  margin-left: 50px; /* Aligns content next to the sidebar */
+  margin-top: 50px;
+  padding: 20px; /* Padding for the main content area */
+  width: 100%; /* Ensures full width for the content area */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+}
+
+.main-content-task {
+  margin-left: 50px; /* Aligns content next to the sidebar */
+  margin-top: 50px;
+  padding: 20px; /* Padding for the main content area */
+  width: 100%; /* Ensures full width for the content area */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+}
+
+
+
+
+
