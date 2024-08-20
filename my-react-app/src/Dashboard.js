@@ -166,7 +166,7 @@ const Dashboard = () => {
                     <h5 className="card-title">Low: 6</h5>
                   </div>
                   <div className="me-3">
-                    <h5 className="card-title">Moderate: 4</h5>
+                    <h5 className="card-title">Moderate: 2</h5>
                   </div>
                   <div className="me-3">
                     <h5 className="card-title">High: 1</h5>
