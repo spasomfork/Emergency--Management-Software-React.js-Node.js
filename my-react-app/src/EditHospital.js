@@ -8,47 +8,47 @@ import {
     FaPhoneAlt, FaClipboardList, FaNewspaper, FaCogs, FaComments
 } from 'react-icons/fa';
 
-const EditEvacuationCenter = () => {
+const EditHospital = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { id } = useParams();
-    const [evacuationCenter, setEvacuationCenter] = useState({
+    const [hospital, setHospital] = useState({
         Name: '',
         Location: '',
-        Capacity: '',
-        AvailabilityStatus: ''
+        Status: '',
+        Capacity: ''
     });
     const username = localStorage.getItem('username') || 'Guest';
 
     useEffect(() => {
-        // Fetch evacuation center data by ID
-        const fetchEvacuationCenter = async () => {
+        // Fetch hospital data by ID
+        const fetchHospital = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/evacuation-centers/${id}`);
+                const response = await axios.get(`http://localhost:5000/hospitals/${id}`);
                 if (response.data) {
-                    setEvacuationCenter(response.data);
+                    setHospital(response.data);
                 } else {
-                    alert('Evacuation Center not found');
-                    navigate('/evacuation');
+                    alert('Hospital not found');
+                    navigate('/hospitals');
                 }
             } catch (error) {
-                console.error('Error fetching evacuation center:', error);
-                alert('Error fetching evacuation center');
+                console.error('Error fetching hospital:', error);
+                alert('Error fetching hospital');
             }
         };
 
-        fetchEvacuationCenter();
+        fetchHospital();
     }, [id, navigate]);
 
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:5000/evacuation-centers/${id}`, evacuationCenter);
+            await axios.put(`http://localhost:5000/hospitals/${id}`, hospital);
             alert('Updated successfully');
-            navigate('/evacuation', { state: { username } });
+            navigate('/hospitals', { state: { username } });
         } catch (error) {
-            console.error('Error updating evacuation center:', error.response?.data || error.message);
-            alert('Failed to update evacuation center. Please try again.');
+            console.error('Error updating hospital:', error.response?.data || error.message);
+            alert('Failed to update hospital. Please try again.');
         }
     };
 
@@ -120,7 +120,7 @@ const EditEvacuationCenter = () => {
                 {/* Main content */}
                 <div className="main-content-evacuation-center-edit d-flex justify-content-center align-items-start">
                     <div className="container" style={{ maxWidth: '80%' }}>
-                        <h2 className="mb-4">Edit Evacuation Center</h2>
+                        <h2 className="mb-4">Edit Hospital</h2>
                         <form onSubmit={handleUpdate}>
                             <div className="form-group mb-3">
                                 <label htmlFor="name">Name:</label>
@@ -128,8 +128,8 @@ const EditEvacuationCenter = () => {
                                     type="text"
                                     id="name"
                                     className="form-control"
-                                    value={evacuationCenter.Name}
-                                    onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Name: e.target.value })}
+                                    value={hospital.Name}
+                                    onChange={(e) => setHospital({ ...hospital, Name: e.target.value })}
                                     required
                                 />
                             </div>
@@ -140,8 +140,20 @@ const EditEvacuationCenter = () => {
                                     type="text"
                                     id="location"
                                     className="form-control"
-                                    value={evacuationCenter.Location}
-                                    onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Location: e.target.value })}
+                                    value={hospital.Location}
+                                    onChange={(e) => setHospital({ ...hospital, Location: e.target.value })}
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-group mb-3">
+                                <label htmlFor="status">Status:</label>
+                                <input
+                                    type="text"
+                                    id="status"
+                                    className="form-control"
+                                    value={hospital.Status}
+                                    onChange={(e) => setHospital({ ...hospital, Status: e.target.value })}
                                     required
                                 />
                             </div>
@@ -152,20 +164,8 @@ const EditEvacuationCenter = () => {
                                     type="text"
                                     id="capacity"
                                     className="form-control"
-                                    value={evacuationCenter.Capacity}
-                                    onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Capacity: e.target.value })}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group mb-3">
-                                <label htmlFor="availabilityStatus">Availability Status:</label>
-                                <input
-                                    type="text"
-                                    id="availabilityStatus"
-                                    className="form-control"
-                                    value={evacuationCenter.AvailabilityStatus}
-                                    onChange={(e) => setEvacuationCenter({ ...evacuationCenter, AvailabilityStatus: e.target.value })}
+                                    value={hospital.Capacity}
+                                    onChange={(e) => setHospital({ ...hospital, Capacity: e.target.value })}
                                     required
                                 />
                             </div>
@@ -181,4 +181,4 @@ const EditEvacuationCenter = () => {
     );
 };
 
-export default EditEvacuationCenter;
+export default EditHospital;
