@@ -15,6 +15,9 @@ import EditEvacuationCentres from './EditEvacuationcentre';
 import CreateEvacuationCenter from './CreateEvacuationcentre';
 import Task from './Task';
 import CreateTask from './CreateTask';
+import LifelineNumbers from './LifelineNumbers';
+import CreateLifelineCSV from './CreateLifeNumbers';
+import EditLifeline from './EditLifelineNumbers';
 
 function App() {
   return (
@@ -35,6 +38,11 @@ function App() {
         <Route path="/create-evacuationcentre" element={<CreateEvacuationCenter />} />
         <Route path="/task-management" element={<Task />} />
         <Route path="/create-task" element={<CreateTask />} />
+        <Route path='/lifeline-numbers-management' element={<LifelineNumbers />} />
+        <Route path="/create-lifeline-csv" element={<CreateLifelineCSV />} />
+        <Route path="/edit-lifeline-number/:id" element={<EditLifeline />} />
+
+
       </Routes>
     </Router>
   );

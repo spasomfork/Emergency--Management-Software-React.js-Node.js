@@ -62,11 +62,19 @@ html, body, #root {
   margin-top: 100px;
   width: 50%;
   background-color: #f8f9fa;
+}
 
-
+.main-content-lifeline-edit {
+  margin-left:50px; /* Aligns content next to the sidebar */
+  margin-top: 100px;
+  padding:1px; /* Padding for the main content area */
+  width:80%; /* Full width minus sidebar width */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
 }
 
 .main-content-incident,
+.main-content-lifeline,
 .main-content-hospital,
 .main-content-evacuation-center,
 .main-content-task {

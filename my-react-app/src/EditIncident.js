@@ -78,7 +78,7 @@ const EditIncident = () => {
         { path: '/evacuation', label: 'Evacuation Centers', icon: <FaCity /> },
         { path: '/role-management', label: 'Role Management', icon: <FaUserShield /> },
         { path: '/task-management', label: 'Task Management', icon: <FaTasks /> },
-        { path: '/lifeline-numbers-management', label: 'Lifeline Numbers Management', icon: <FaPhoneAlt /> },
+        { path: '/lifeline-numbers-management', label: 'Lifeline Numbers', icon: <FaPhoneAlt /> },
         { path: '/damage-reporting', label: 'Damage Reporting', icon: <FaClipboardList /> },
         { path: '/news-alerts-management', label: 'News Alerts Management', icon: <FaNewspaper /> },
         { path: '/resource-allocation', label: 'Resource Allocation', icon: <FaCogs /> },

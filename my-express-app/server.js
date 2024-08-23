@@ -15,6 +15,7 @@ app.use(cors({
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Set up MySQL connection
 const db = mysql.createConnection({
@@ -48,6 +49,7 @@ const incidentRoutes = require('./incident')(db);
 const hospitalRoutesRoutes = require('./hospital')(db);
 const evacuationRoutes = require('./evacuationcentre')(db);
 const taskRoutes = require('./task')(db);
+const lifelinenumberRoutes = require('./lifelinenumber')(db);
 
 app.use(incidentRoutes);
 app.use(loginRoutes);
@@ -55,6 +57,7 @@ app.use(registerRoutes);
 app.use(hospitalRoutesRoutes);
 app.use(evacuationRoutes);
 app.use(taskRoutes);
+app.use(lifelinenumberRoutes);
 
 // Start the server using HTTP
 const server = http.createServer(app);
