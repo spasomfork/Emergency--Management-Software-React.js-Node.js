@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Dropdown, Button, Container } from 'react-bootstrap';
 import axios from 'axios';
+import jsPDF from 'jspdf';
 import {
   FaHome, FaUser, FaBell, FaExclamationCircle, FaCity, FaUserShield, FaTasks,
   FaPhoneAlt, FaClipboardList, FaNewspaper, FaCogs, FaComments
@@ -51,33 +52,31 @@ const LifelineNumbers = () => {
     navigate('/create-lifeline-csv');
   };
 
-  const handleCreatePDF = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/lifeline-numbers/pdf', { responseType: 'blob' });
-      // Code to handle the response, such as opening the PDF in a new tab
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'lifeline-numbers.pdf'); // Or any other filename
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link); // Clean up
-    } catch (error) {
-      console.error('Error creating PDF:', error);
-      // Log detailed error info
-      if (error.response) {
-        console.error('Response error:', error.response.data);
-        console.error('Response status:', error.response.status);
-      } else if (error.request) {
-        console.error('Request error:', error.request);
-      } else {
-        console.error('General error:', error.message);
-      }
-      alert('Failed to create PDF');
-    }
+  const handleCreatePDF = () => {
+    const doc = new jsPDF();
+
+    // Add a title to the PDF
+    doc.setFontSize(18);
+    doc.text('Lifeline Numbers', 80, 20);
+
+    // Add a table header
+    doc.setFontSize(12);
+    doc.text('ID', 20, 40);
+    doc.text('Service Name', 40, 40);
+    doc.text('Contact Number', 130, 40);
+
+    // Add the lifeline numbers to the PDF
+    let yPosition = 50; // Start position for the first row
+    lifelineNumbers.forEach((number, index) => {
+      doc.text(`${number.NumberID}`, 20, yPosition);
+      doc.text(`${number.ServiceName}`, 40, yPosition);
+      doc.text(`${number.ContactNumber}`, 130, yPosition);
+      yPosition += 10; // Move down for the next row
+    });
+
+    // Open the generated PDF in a new window
+    window.open(doc.output('bloburl'), '_blank');
   };
-  
-  
 
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: <FaHome /> },

@@ -59,20 +59,25 @@ module.exports = (db) => {
         });
     });
 
-    // Update a lifeline number
-    router.put('/lifeline-numbers/:id', (req, res) => {
-        const { id } = req.params;
-        const { ServiceName, ContactNumber } = req.body;
+   // Update a lifeline number
+router.put('/lifeline-numbers/:id', (req, res) => {
+    const { id } = req.params;
+    let { ServiceName, ContactNumber } = req.body;
 
-        const query = 'UPDATE lifelinenumber SET ServiceName = ?, ContactNumber = ? WHERE NumberID = ?';
-        db.query(query, [ServiceName, ContactNumber, id], (err, results) => {
-            if (err) {
-                console.error('Error updating lifeline number:', err);
-                return res.status(500).json({ message: 'Failed to update lifeline number' });
-            }
-            res.json({ message: 'Lifeline number updated successfully' });
-        });
+    // Trim the input values
+    ServiceName = ServiceName.trim();
+    ContactNumber = ContactNumber.trim();
+
+    const query = 'UPDATE lifelinenumber SET ServiceName = ?, ContactNumber = ? WHERE NumberID = ?';
+    db.query(query, [ServiceName, ContactNumber, id], (err, results) => {
+        if (err) {
+            console.error('Error updating lifeline number:', err);
+            return res.status(500).json({ message: 'Failed to update lifeline number' });
+        }
+        res.json({ message: 'Lifeline number updated successfully' });
     });
+});
+
 
     // Delete a lifeline number
     router.delete('/lifeline-numbers/:id', (req, res) => {
@@ -87,95 +92,61 @@ module.exports = (db) => {
             res.json({ message: 'Lifeline number deleted successfully' });
         });
     });
+// Upload and process lifeline numbers via CSV
+router.post('/lifeline-numbers/upload', upload.single('file'), (req, res) => {
+    const filePath = req.file.path;
+    const lifelineNumbers = [];
 
-    // Create lifeline numbers via CSV
-    router.post('/lifeline-numbers/upload', upload.single('file'), (req, res) => {
-        const filePath = req.file.path;
+    // Parse the CSV file
+    fs.createReadStream(filePath)
+        .pipe(csvParser())
+        .on('data', (row) => {
+            // Trim field names and values
+            const trimmedRow = {};
+            for (const [key, value] of Object.entries(row)) {
+                trimmedRow[key.trim()] = value.trim();
+            }
 
-        const lifelineNumbers = [];
+            const { ServiceName, ContactNumber } = trimmedRow;
 
-        // Parse CSV file
-        fs.createReadStream(filePath)
-            .pipe(csvParser())
-            .on('data', (row) => {
-                // Assuming the CSV has headers: ServiceName, ContactNumber
-                const { ServiceName, ContactNumber } = row;
+            // Ensure all fields are present and valid
+            if (ServiceName && ContactNumber) {
                 lifelineNumbers.push([ServiceName, ContactNumber]);
-            })
-            .on('end', () => {
-                const query = 'INSERT INTO lifelinenumber (ServiceName, ContactNumber) VALUES ?';
+            } else {
+                console.warn(`Invalid row detected and skipped: ${JSON.stringify(trimmedRow)}`);
+            }
+        })
+        .on('end', () => {
+            // Log the array content for debugging
+            console.log('Lifeline numbers array:', lifelineNumbers);
 
-                db.query(query, [lifelineNumbers], (err, results) => {
-                    if (err) {
-                        console.error('Error uploading lifeline numbers:', err);
-                        return res.status(500).json({ message: 'Failed to upload lifeline numbers' });
-                    }
-                    res.status(201).json({ message: 'Lifeline numbers uploaded successfully' });
-                });
-
-                // Clean up the uploaded file
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error('Error deleting file:', err);
-                    }
-                });
-            });
-    });
-
-    // Generate PDF for lifeline numbers
-router.get('/lifeline-numbers/pdf', async (req, res) => {
-    try {
-        // Query to get all lifeline numbers
-        const query = 'SELECT * FROM lifelinenumber';
-        db.query(query, (err, results) => {
-            if (err) {
-                console.error('Error fetching lifeline numbers:', err);
-                return res.status(500).json({ message: 'Failed to retrieve lifeline numbers' });
+            if (lifelineNumbers.length === 0) {
+                return res.status(400).json({ message: 'No valid lifeline numbers found in the CSV file.' });
             }
 
-            if (results.length === 0) {
-                console.log('No lifeline numbers found');
-                return res.status(404).json({ message: 'No lifeline numbers found' });
-            }
+            // Bulk insert into the database
+            const query = 'INSERT INTO lifelinenumber (ServiceName, ContactNumber) VALUES ?';
+            db.query(query, [lifelineNumbers], (err, results) => {
+                // Delete the file after processing
+                fs.unlink(filePath, (unlinkErr) => {
+                    if (unlinkErr) {
+                        console.error('Error deleting the file:', unlinkErr);
+                    }
+                });
 
-            const doc = new PDFDocument();
-            let pdfStream = doc.pipe(new stream.PassThrough());
-
-            // Add more detailed logging
-            doc.on('error', (err) => {
-            console.error('PDFKit Error:', err);
+                if (err) {
+                    console.error('Error inserting lifeline numbers:', err);
+                    return res.status(500).json({ message: 'Failed to upload lifeline numbers' });
+                }
+                res.status(201).json({ message: 'Lifeline numbers uploaded successfully', insertedCount: results.affectedRows });
             });
-
-
-            doc.fontSize(16).text('Lifeline Numbers', { align: 'center' });
-            doc.moveDown();
-
-            doc.fontSize(12);
-            doc.text('ID', { continued: true, underline: true });
-            doc.text('Service Name', { continued: true, underline: true });
-            doc.text('Contact Number', { underline: true });
-            doc.moveDown();
-
-            results.forEach((number) => {
-                doc.text(number.NumberID.toString(), { continued: true });
-                doc.text(number.ServiceName, { continued: true });
-                doc.text(number.ContactNumber);
-            });
-
-            doc.end();
-            
-            pdfStream.on('end', () => {
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', 'attachment; filename="lifeline_numbers.pdf"');
-                pdfStream.pipe(res);
-            });
-
+        })
+        .on('error', (err) => {
+            console.error('Error processing CSV:', err);
+            res.status(500).json({ message: 'Failed to process CSV file' });
         });
-    } catch (error) {
-        console.error('Error generating PDF:', error);
-        res.status(500).json({ message: 'Failed to generate PDF' });
-    }
 });
+
 
 
     return router;
