@@ -3,14 +3,13 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Navbar, Nav, Dropdown, Button, Container } from 'react-bootstrap';
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import {
-  FaHome, FaUser, FaBell, FaExclamationCircle, FaCity, FaUserShield, FaTasks,
-  FaPhoneAlt, FaClipboardList, FaNewspaper, FaCogs, FaComments
-} from 'react-icons/fa';
+import DataTable from 'react-data-table-component';
+import { FaHome, FaUser, FaBell, FaExclamationCircle, FaCity, FaUserShield, FaTasks, FaPhoneAlt, FaClipboardList, FaNewspaper, FaCogs, FaComments } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const LifelineNumbers = () => {
   const [lifelineNumbers, setLifelineNumbers] = useState([]);
+  const [filterText, setFilterText] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const username = localStorage.getItem('username') || 'Guest';
@@ -45,7 +44,7 @@ const LifelineNumbers = () => {
   };
 
   const handleLogout = () => {
-    navigate('/'); // Redirect to login page
+    navigate('/');
   };
 
   const handleCreateCSV = () => {
@@ -54,27 +53,21 @@ const LifelineNumbers = () => {
 
   const handleCreatePDF = () => {
     const doc = new jsPDF();
-
-    // Add a title to the PDF
     doc.setFontSize(18);
     doc.text('Lifeline Numbers', 80, 20);
-
-    // Add a table header
     doc.setFontSize(12);
     doc.text('ID', 20, 40);
     doc.text('Service Name', 40, 40);
     doc.text('Contact Number', 130, 40);
 
-    // Add the lifeline numbers to the PDF
-    let yPosition = 50; // Start position for the first row
-    lifelineNumbers.forEach((number, index) => {
+    let yPosition = 50;
+    lifelineNumbers.forEach((number) => {
       doc.text(`${number.NumberID}`, 20, yPosition);
       doc.text(`${number.ServiceName}`, 40, yPosition);
-      doc.text(`${number.ContactNumber}`, 130, yPosition);
-      yPosition += 10; // Move down for the next row
+      doc.text(`${String(number.ContactNumber || '').trim()}`, 130, yPosition); // Ensure contact number is a string
+      yPosition += 10;
     });
 
-    // Open the generated PDF in a new window
     window.open(doc.output('bloburl'), '_blank');
   };
 
@@ -92,9 +85,54 @@ const LifelineNumbers = () => {
     { path: '/chat', label: 'Chat', icon: <FaComments /> }
   ];
 
+  const columns = [
+    {
+      name: 'ID',
+      selector: row => row.NumberID,
+      sortable: true,
+      width: '80px'
+    },
+    {
+      name: 'Service Name',
+      selector: row => row.ServiceName,
+      sortable: true,
+      style: {
+        fontSize: '18px', // Increase font size
+      }
+    },
+    {
+      name: 'Contact Number',
+      selector: row => String(row.ContactNumber || '').trim(), // Ensure contact number is a string
+      sortable: true,
+      style: {
+        fontSize: '18px', // Increase font size
+      }
+    },
+    {
+      name: 'Actions',
+      cell: row => (
+        <div style={{ display: 'flex', gap: '10px' }}> {/* Adjust button spacing */}
+          <button className="btn btn-danger" onClick={() => handleDelete(row.NumberID)}>
+            Delete
+          </button>
+          <button className="btn btn-primary" onClick={() => handleEdit(row.NumberID)}>
+            Edit
+          </button>
+        </div>
+      ),
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
+      width: '200px', // Adjust button column width
+    }
+  ];
+
+  const filteredData = lifelineNumbers.filter(
+    item => item.ServiceName && item.ServiceName.toLowerCase().includes(filterText.toLowerCase())
+  );
+
   return (
     <div className="d-flex flex-column h-100">
-      {/* Top bar */}
       <Navbar bg="secondary" variant="dark" fixed="top">
         <Container fluid>
           <Navbar.Brand>Hi, {username}</Navbar.Brand>
@@ -115,9 +153,9 @@ const LifelineNumbers = () => {
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item href="#pablo" onClick={(e) => e.preventDefault()}>Notification 1</Dropdown.Item>
-                <Dropdown.Item href="#pablo" onClick={(e) => e.preventDefault()}>Notification 2</Dropdown.Item>
-                <Dropdown.Item href="#pablo" onClick={(e) => e.preventDefault()}>Notification 3</Dropdown.Item>
+                <Dropdown.Item>Notification 1</Dropdown.Item>
+                <Dropdown.Item>Notification 2</Dropdown.Item>
+                <Dropdown.Item>Notification 3</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
             <Button variant="info" onClick={handleLogout}>Logout</Button>
@@ -126,7 +164,6 @@ const LifelineNumbers = () => {
       </Navbar>
 
       <div className="d-flex flex-grow-1">
-        {/* Sidebar */}
         <div className="bg-dark text-white sidebar">
           <ul className="nav flex-column px-3">
             {navItems.map((item) => (
@@ -139,60 +176,52 @@ const LifelineNumbers = () => {
           </ul>
         </div>
 
-        {/* Main content */}
         <div className="main-content-lifeline">
           <div className="container mt-4">
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h2>Lifeline Numbers</h2>
               <div>
-                <Button 
-                    variant="success" 
-                    onClick={handleCreatePDF} 
-                    style={{ marginRight: '25px' }}
-                  >
-                    Print PDF
-                  </Button>
-                <Button 
-                  variant="success" 
-                  onClick={handleCreateCSV}
-                >
+                <Button variant="success" onClick={handleCreatePDF} style={{ marginRight: '25px' }}>
+                  Print PDF
+                </Button>
+                <Button variant="success" onClick={handleCreateCSV}>
                   Add New Lifeline Number by CSV Upload
                 </Button>
               </div>
             </div>
-            <table className="table table-striped">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Service Name</th>
-                  <th>Contact Number</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lifelineNumbers.map((number) => (
-                  <tr key={number.NumberID}>
-                    <td>{number.NumberID}</td>
-                    <td>{number.ServiceName}</td>
-                    <td>{number.ContactNumber}</td>
-                    <td>
-                      <button
-                        className="btn btn-danger me-2"
-                        onClick={() => handleDelete(number.NumberID)}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleEdit(number.NumberID)}
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            
+            {/* Search Input */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <input
+                type="text"
+                placeholder="Search by Service Name"
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                className="form-control"
+                style={{ width: '250px', fontSize: '16px' }} // Adjust font size of the input
+              />
+            </div>
+
+            <DataTable
+              columns={columns}
+              data={filteredData}
+              pagination
+              highlightOnHover
+              responsive
+              defaultSortFieldId="NumberID"
+              customStyles={{
+                header: {
+                  style: {
+                    fontSize: '25px', // Larger font for headers
+                  },
+                },
+                rows: {
+                  style: {
+                    fontSize: '18px', // Larger font for rows
+                  },
+                },
+              }}
+            />
           </div>
         </div>
       </div>

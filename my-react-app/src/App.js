@@ -18,6 +18,12 @@ import CreateTask from './CreateTask';
 import LifelineNumbers from './LifelineNumbers';
 import CreateLifelineCSV from './CreateLifeNumbers';
 import EditLifeline from './EditLifelineNumbers';
+import Role from './Roles';
+import EditRoles from './EditRoles';
+import CreateRoles from './CreateRoles';
+import Damage from './DamageReporting';
+import CreateDamage from './CreateDamageReporting';
+
 
 function App() {
   return (
@@ -41,6 +47,13 @@ function App() {
         <Route path='/lifeline-numbers-management' element={<LifelineNumbers />} />
         <Route path="/create-lifeline-csv" element={<CreateLifelineCSV />} />
         <Route path="/edit-lifeline-number/:id" element={<EditLifeline />} />
+        <Route path="/role-management" element={<Role />} />
+        <Route path="/edit-roles/:id" element={<EditRoles />} />
+        <Route path="/create-roles" element={<CreateRoles />} />
+        <Route path="/damage-reporting" element={<Damage />} />
+        <Route path="/create-damage-report" element={<CreateDamage />} />
+
+
 
 
       </Routes>

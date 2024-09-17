@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Aug 23, 2024 at 12:34 PM
+-- Generation Time: Aug 26, 2024 at 09:53 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 7.4.29
 
@@ -119,7 +119,7 @@ CREATE TABLE `incident` (
 INSERT INTO `incident` (`IncidentID`, `Title`, `Description`, `Status`, `Date`, `Latitude`, `Longitude`) VALUES
 (1, 'Flood in Colombo', 'Some parts of Colombo are submerged in flood', 'High', '2024-08-20', '7.193237', '79.851135'),
 (2, 'Landslide in Kandy', 'A landslide in Kandy blocks the main Kandy road', 'Low', '2024-08-20', '7.284865', '80.660429'),
-(5, 'Flood', 'Flood in Wattala', 'High', '2024-08-21', '8.043228', '80.466103');
+(5, 'Flood', 'Flood in Wattala', 'High', '2024-08-24', '9.321217', '80.391942');
 
 -- --------------------------------------------------------
 
@@ -143,7 +143,7 @@ CREATE TABLE `inventory` (
 CREATE TABLE `lifelinenumber` (
   `NumberID` int(11) NOT NULL,
   `ServiceName` varchar(255) NOT NULL,
-  `ContactNumber` int(30) NOT NULL
+  `ContactNumber` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -157,12 +157,12 @@ INSERT INTO `lifelinenumber` (`NumberID`, `ServiceName`, `ContactNumber`) VALUES
 (4, 'Disaster Management Center', 117),
 (5, 'National Child Protection Authority', 1929),
 (6, 'Women\'s Help Line', 1938),
-(7, 'Sri Lanka Red Cross Society', 11),
-(8, 'National Blood Transfusion Service', 11),
-(9, 'Sri Lanka Wildlife Emergency', 11),
-(10, 'Colombo Municipal Council', 11),
-(11, 'Roadside Assistance (Sri Lanka Automobile Association)', 11),
-(12, 'Tourist Police', 11);
+(7, 'Sri Lanka Red Cross Society', 112691095),
+(8, 'National Blood Transfusion Service', 112369931),
+(9, 'Sri Lanka Wildlife Emergency', 112888585),
+(10, 'Colombo Municipal Council', 112676171),
+(11, 'Roadside Assistance ', 112421528),
+(12, 'Tourist Police', 112421281);
 
 -- --------------------------------------------------------
 
@@ -186,6 +186,7 @@ CREATE TABLE `newsalert` (
 CREATE TABLE `personnel` (
   `PersonnelID` int(11) NOT NULL,
   `Name` varchar(255) NOT NULL,
+  `Status` varchar(100) NOT NULL,
   `Role` varchar(255) DEFAULT NULL,
   `ContactInformation` varchar(255) DEFAULT NULL,
   `Password` varchar(50) NOT NULL
@@ -195,12 +196,12 @@ CREATE TABLE `personnel` (
 -- Dumping data for table `personnel`
 --
 
-INSERT INTO `personnel` (`PersonnelID`, `Name`, `Role`, `ContactInformation`, `Password`) VALUES
-(1, 'Pramuka', 'Admin', '0762529400', '123'),
-(3, 'jnsif', 'vwmw', '1234', '1vcw'),
-(4, 'Mihiri', 'Manager', '076252400', '123'),
-(5, 'Mihiri', 'User', '07783666', '234'),
-(6, 'John', 'Driver', '76252398', '456');
+INSERT INTO `personnel` (`PersonnelID`, `Name`, `Status`, `Role`, `ContactInformation`, `Password`) VALUES
+(1, 'Pramuka', '', 'Admin', '0762529400', '123'),
+(3, 'jnsif', '', 'vwmw', '1234', '1vcw'),
+(4, 'Mihiri', '', 'Manager', '076252400', '123'),
+(5, 'Mihiri', '', 'User', '07783666', '234'),
+(6, 'John', '', 'Driver', '76252398', '456');
 
 -- --------------------------------------------------------
 
@@ -225,18 +226,6 @@ CREATE TABLE `resource` (
   `Name` varchar(255) NOT NULL,
   `Quantity` int(11) DEFAULT NULL,
   `Type` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `role`
---
-
-CREATE TABLE `role` (
-  `RoleID` int(11) NOT NULL,
-  `RoleName` varchar(255) NOT NULL,
-  `Description` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -275,22 +264,6 @@ INSERT INTO `task` (`TaskID`, `Title`, `Description`, `Status`, `AssignedTo`, `D
 (1, 'Help', 'Help the affected', 'InProgress', 'Pramuka', '2024-08-12'),
 (3, 'Distribute', 'Distribute food to affected people', 'InProgress', 'Kasun', '2024-08-15'),
 (5, 'Search and Rescue', 'Search and rescue people in flooded area', 'InProgress', 'Nadeeka', '2024-08-29');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `users`
---
-
-CREATE TABLE `users` (
-  `UserID` int(11) NOT NULL,
-  `Name` varchar(255) NOT NULL,
-  `RoleID` int(11) DEFAULT NULL,
-  `ContactInformation` varchar(255) DEFAULT NULL,
-  `Login` datetime DEFAULT NULL,
-  `Logout` datetime DEFAULT NULL,
-  `UpdatedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -378,12 +351,6 @@ ALTER TABLE `resource`
   ADD PRIMARY KEY (`ResourceID`);
 
 --
--- Indexes for table `role`
---
-ALTER TABLE `role`
-  ADD PRIMARY KEY (`RoleID`);
-
---
 -- Indexes for table `shelter`
 --
 ALTER TABLE `shelter`
@@ -394,13 +361,6 @@ ALTER TABLE `shelter`
 --
 ALTER TABLE `task`
   ADD PRIMARY KEY (`TaskID`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`UserID`),
-  ADD KEY `RoleID` (`RoleID`);
 
 --
 -- Indexes for table `volunteer`
@@ -463,12 +423,6 @@ ALTER TABLE `chat`
 --
 ALTER TABLE `damagereport`
   ADD CONSTRAINT `damagereport_ibfk_1` FOREIGN KEY (`IncidentID`) REFERENCES `incident` (`IncidentID`);
-
---
--- Constraints for table `users`
---
-ALTER TABLE `users`
-  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`RoleID`) REFERENCES `role` (`RoleID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

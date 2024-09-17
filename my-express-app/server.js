@@ -50,6 +50,8 @@ const hospitalRoutesRoutes = require('./hospital')(db);
 const evacuationRoutes = require('./evacuationcentre')(db);
 const taskRoutes = require('./task')(db);
 const lifelinenumberRoutes = require('./lifelinenumber')(db);
+const roleRoutes = require('./roles')(db);
+const damageRoutes = require('./damagereporting')(db);
 
 app.use(incidentRoutes);
 app.use(loginRoutes);
@@ -58,6 +60,8 @@ app.use(hospitalRoutesRoutes);
 app.use(evacuationRoutes);
 app.use(taskRoutes);
 app.use(lifelinenumberRoutes);
+app.use(roleRoutes);
+app.use(damageRoutes);
 
 // Start the server using HTTP
 const server = http.createServer(app);
