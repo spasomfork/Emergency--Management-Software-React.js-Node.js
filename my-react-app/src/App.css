@@ -86,7 +86,26 @@ html, body, #root {
   background-color: #f8f9fa; /* Light background color for main content */
 }
 
+.main-content-alerts{
+
+  margin-top: 50px;
+  padding: 20px; /* Padding for the main content area */
+  width:100%; /* Full width minus sidebar width */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+
+}
+
 .main-content-damage-report{
+  margin-top: 50px;
+  padding: 20px; /* Padding for the main content area */
+  width:100%; /* Full width minus sidebar width */
+  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  background-color: #f8f9fa; /* Light background color for main content */
+}
+
+.main-content-resources{
+
   margin-top: 50px;
   padding: 20px; /* Padding for the main content area */
   width:100%; /* Full width minus sidebar width */
@@ -109,3 +128,5 @@ html, body, #root {
   height: 50vh; /* Ensure height is responsive */
   width: 100%;
 }
+
+

@@ -23,7 +23,10 @@ import EditRoles from './EditRoles';
 import CreateRoles from './CreateRoles';
 import Damage from './DamageReporting';
 import CreateDamage from './CreateDamageReporting';
-
+import NewsAlert from './NewsAlert';
+import ViewNewsAlert from './ViewNewsAlert';
+import Resource from './Resource';
+import CreateResource from './CreateResource';
 
 function App() {
   return (
@@ -52,6 +55,13 @@ function App() {
         <Route path="/create-roles" element={<CreateRoles />} />
         <Route path="/damage-reporting" element={<Damage />} />
         <Route path="/create-damage-report" element={<CreateDamage />} />
+        <Route path="/news-alerts-management" element={<NewsAlert />} />
+        <Route path="/view-news-alert/:id" element={<ViewNewsAlert />} />
+        <Route path="/resource-allocation" element={<Resource />} />
+        <Route path="/resource-allocation" element={<Resource />} />
+        <Route path="/create-resource" element={<CreateResource/>} />
+
+
 
 
 

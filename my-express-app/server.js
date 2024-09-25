@@ -52,6 +52,8 @@ const taskRoutes = require('./task')(db);
 const lifelinenumberRoutes = require('./lifelinenumber')(db);
 const roleRoutes = require('./roles')(db);
 const damageRoutes = require('./damagereporting')(db);
+const newsalertRoutes = require('./newsalert')(db);
+const resourceRoutes = require('./resource')(db);
 
 app.use(incidentRoutes);
 app.use(loginRoutes);
@@ -62,6 +64,8 @@ app.use(taskRoutes);
 app.use(lifelinenumberRoutes);
 app.use(roleRoutes);
 app.use(damageRoutes);
+app.use(newsalertRoutes);
+app.use(resourceRoutes);
 
 // Start the server using HTTP
 const server = http.createServer(app);
