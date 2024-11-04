@@ -106,6 +106,9 @@ const CreateHospital = () => {
                   id="hospitalName"
                   value={hospital.Name}
                   onChange={(e) => setHospital({ ...hospital, Name: e.target.value })}
+                  pattern="^[A-Z][a-z]{1,14}( [A-Z][a-z]{1,14})*$"
+                  title="Name"
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -116,6 +119,9 @@ const CreateHospital = () => {
                   id="hospitalLocation"
                   value={hospital.Location}
                   onChange={(e) => setHospital({ ...hospital, Location: e.target.value })}
+                  pattern="^[A-Z][a-z]{1,14}$"
+                  title="Location"
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -126,6 +132,9 @@ const CreateHospital = () => {
                   id="hospitalStatus"
                   value={hospital.Status}
                   onChange={(e) => setHospital({ ...hospital, Status: e.target.value })}
+                  pattern="^(Active|Deactive|Operational)$"
+                  title="Status"
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -136,6 +145,9 @@ const CreateHospital = () => {
                   id="hospitalCapacity"
                   value={hospital.Capacity}
                   onChange={(e) => setHospital({ ...hospital, Capacity: e.target.value })}
+                  pattern="^[1-9]\d{0,3}$|^10000$"
+                  title="Capacity"
+                  required
                 />
               </div>
               <div className="col-md-6">

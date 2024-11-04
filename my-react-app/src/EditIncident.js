@@ -11,7 +11,6 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 
-// Custom icon URL (replace with your desired icon)
 const customIcon = L.icon({
     iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
     iconSize: [25, 41],
@@ -36,7 +35,6 @@ const EditIncident = () => {
     const username = localStorage.getItem('username') || 'Guest';
 
     useEffect(() => {
-        // Fetch incident data by ID
         const fetchIncident = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/incidents/${id}`);
@@ -51,7 +49,6 @@ const EditIncident = () => {
                 alert('Error fetching incident');
             }
         };
-
         fetchIncident();
     }, [id, navigate]);
 
@@ -68,7 +65,7 @@ const EditIncident = () => {
     };
 
     const handleLogout = () => {
-        navigate('/'); // Redirect to login page
+        navigate('/');
     };
 
     const navItems = [
@@ -85,7 +82,6 @@ const EditIncident = () => {
         { path: '/chat', label: 'Chat', icon: <FaComments /> }
     ];
 
-    // Component to handle the map click and marker placement
     function LocationMarker() {
         const map = useMapEvents({
             click(e) {
@@ -97,7 +93,6 @@ const EditIncident = () => {
                 });
             }
         });
-
         return incident.Latitude && incident.Longitude ? (
             <Marker position={[incident.Latitude, incident.Longitude]} icon={customIcon} />
         ) : null;
@@ -163,6 +158,7 @@ const EditIncident = () => {
                                     className="form-control"
                                     value={incident.Title}
                                     onChange={(e) => setIncident({ ...incident, Title: e.target.value })}
+                                    pattern="([A-Z][a-z]{1,14})(\s[A-Z][a-z]{1,14})*"
                                     required
                                 />
                             </div>
@@ -174,6 +170,7 @@ const EditIncident = () => {
                                     className="form-control"
                                     value={incident.Description}
                                     onChange={(e) => setIncident({ ...incident, Description: e.target.value })}
+                                    pattern="([A-Z][a-z]{1,14})(\s([A-Za-z][a-z]{1,14}))*"
                                     required
                                 />
                             </div>
@@ -186,6 +183,7 @@ const EditIncident = () => {
                                     className="form-control"
                                     value={incident.Status}
                                     onChange={(e) => setIncident({ ...incident, Status: e.target.value })}
+                                    pattern="^(High|Mild|Low)$"
                                     required
                                 />
                             </div>

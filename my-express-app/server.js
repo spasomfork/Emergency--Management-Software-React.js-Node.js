@@ -22,8 +22,8 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'emergency management software',
-    port: 3307
+    database: 'emergency management software', // Ensure the database name is correct
+    port: 3307 // Make sure this matches your MySQL server configuration
 });
 
 db.connect((err) => {
@@ -46,7 +46,7 @@ app.use(session({
 const loginRoutes = require('./login')(db);
 const registerRoutes = require('./register')(db);
 const incidentRoutes = require('./incident')(db);
-const hospitalRoutesRoutes = require('./hospital')(db);
+const hospitalRoutes = require('./hospital')(db);
 const evacuationRoutes = require('./evacuationcentre')(db);
 const taskRoutes = require('./task')(db);
 const lifelinenumberRoutes = require('./lifelinenumber')(db);
@@ -54,11 +54,13 @@ const roleRoutes = require('./roles')(db);
 const damageRoutes = require('./damagereporting')(db);
 const newsalertRoutes = require('./newsalert')(db);
 const resourceRoutes = require('./resource')(db);
+const chatRoutes = require('./chat')(db);
+const dashboardRoutes = require('./dashboard')(db);
 
-app.use(incidentRoutes);
 app.use(loginRoutes);
 app.use(registerRoutes);
-app.use(hospitalRoutesRoutes);
+app.use(incidentRoutes);
+app.use(hospitalRoutes);
 app.use(evacuationRoutes);
 app.use(taskRoutes);
 app.use(lifelinenumberRoutes);
@@ -66,6 +68,8 @@ app.use(roleRoutes);
 app.use(damageRoutes);
 app.use(newsalertRoutes);
 app.use(resourceRoutes);
+app.use(chatRoutes);
+app.use(dashboardRoutes);
 
 // Start the server using HTTP
 const server = http.createServer(app);

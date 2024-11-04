@@ -155,6 +155,9 @@ const CreateDamageReport = () => {
                   id="damageProperty"
                   value={report.Property}
                   onChange={(e) => setReport({ ...report, Property: e.target.value })}
+                  pattern="^[A-Z][a-z]{1,19}$"
+                  title="Property should start with a capital letter, followed by lowercase letters, 2-20 characters."
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -164,15 +167,22 @@ const CreateDamageReport = () => {
                   className="form-control"
                   id="damageSeverity"
                   value={report.Severity}
-                  onChange={(e) => setReport({ ...report, Severity: e.target.value })} />
+                  onChange={(e) => setReport({ ...report, Severity: e.target.value })}
+                  pattern="^(High|Low|Mild)$"
+                  title="Severity must be one of the following: High, Low, or Mild."
+                  required
+                />
               </div>
               <div className="mb-3 col-md-12">
-                <label htmlFor="damageDescription" className="form-label">Damage Description</label> {/* Updated label */}
+                <label htmlFor="damageDescription" className="form-label">Damage Description</label>
                 <textarea
                   className="form-control"
                   id="damageDescription"
                   value={report.DamageDescription}  // Updated value to DamageDescription
                   onChange={(e) => setReport({ ...report, DamageDescription: e.target.value })}  // Updated state setter
+                  pattern="^[A-Z][a-z\s]{0,199}$"
+                  title="Description should start with a capital letter, followed by lowercase letters and spaces, up to 200 characters."
+                  required
                 />
               </div>
 
@@ -184,7 +194,11 @@ const CreateDamageReport = () => {
                   className="form-control"
                   id="damageName"
                   value={report.Name}
-                  onChange={(e) => setReport({ ...report, Name: e.target.value })} />
+                  onChange={(e) => setReport({ ...report, Name: e.target.value })}
+                  pattern="^[A-Z][a-z]{1,14}$"
+                  title="Name should start with a capital letter, be 2-15 characters long, with no numbers."
+                  required
+                />
               </div>
 
               {/* New Photo Upload */}
@@ -194,7 +208,9 @@ const CreateDamageReport = () => {
                   type="file"
                   className="form-control"
                   id="damagePhoto"
-                  onChange={(e) => setReport({ ...report, Photo: e.target.files[0] })} />
+                  onChange={(e) => setReport({ ...report, Photo: e.target.files[0] })}
+                  accept="image/png, image/jpeg"
+                />
               </div>
 
               {/* Map for selecting location */}

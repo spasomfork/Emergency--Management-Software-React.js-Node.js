@@ -130,6 +130,8 @@ const EditEvacuationCenter = () => {
                                     className="form-control"
                                     value={evacuationCenter.Name}
                                     onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Name: e.target.value })}
+                                    pattern="^[A-Z][a-z]{1,14}$"
+                                    title="Name"
                                     required
                                 />
                             </div>
@@ -142,6 +144,8 @@ const EditEvacuationCenter = () => {
                                     className="form-control"
                                     value={evacuationCenter.Location}
                                     onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Location: e.target.value })}
+                                    pattern="^[A-Z][a-z]{1,19}$"
+                                    title="Location"
                                     required
                                 />
                             </div>
@@ -149,11 +153,14 @@ const EditEvacuationCenter = () => {
                             <div className="form-group mb-3">
                                 <label htmlFor="capacity">Capacity:</label>
                                 <input
-                                    type="text"
+                                    type="number"
                                     id="capacity"
                                     className="form-control"
                                     value={evacuationCenter.Capacity}
                                     onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Capacity: e.target.value })}
+                                    min="1"
+                                    max="10000"
+                                    title="Capacity"
                                     required
                                 />
                             </div>
@@ -166,6 +173,8 @@ const EditEvacuationCenter = () => {
                                     className="form-control"
                                     value={evacuationCenter.AvailabilityStatus}
                                     onChange={(e) => setEvacuationCenter({ ...evacuationCenter, AvailabilityStatus: e.target.value })}
+                                    pattern="^(Active|Deactive)$"
+                                    title="Availability Status"
                                     required
                                 />
                             </div>

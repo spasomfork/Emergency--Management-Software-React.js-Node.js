@@ -44,9 +44,7 @@ const RoleManagement = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    navigate(`/edit-roles/${id}`);
-  };
+ 
 
   const handleLogout = () => {
     navigate('/'); // Redirect to login page
@@ -155,12 +153,8 @@ const RoleManagement = () => {
                       >
                         Delete
                       </button>
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleEdit(person.PersonnelID)}
-                      >
-                        Edit
-                      </button>
+                      
+                       
                     </td>
                   </tr>
                 ))}

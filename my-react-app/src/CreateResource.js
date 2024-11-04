@@ -106,6 +106,8 @@ const CreateResource = () => {
                   id="resourceName"
                   value={resource.Name}
                   onChange={(e) => setResource({ ...resource, Name: e.target.value })}
+                  pattern="^[A-Z][a-zA-Z\s]{1,24}$" // First letter capital and 2-25 characters
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -130,6 +132,8 @@ const CreateResource = () => {
                   id="resourceQuantity"
                   value={resource.Quantity}
                   onChange={(e) => setResource({ ...resource, Quantity: e.target.value })}
+                  pattern="^(?:[2-9]|[1-9][0-9]|[1][0-0]{1,2})$" // Number from 2-1000
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -139,6 +143,8 @@ const CreateResource = () => {
                   id="resourceDescription"
                   value={resource.Description}
                   onChange={(e) => setResource({ ...resource, Description: e.target.value })}
+                  pattern="^([A-Z][a-zA-Z\s]{1,24})(\s[A-Za-z][a-zA-Z\s]{1,24})*$" // Multiple words with first letter capital
+                  required
                 />
               </div>
               <div className="col-md-6">

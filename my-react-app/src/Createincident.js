@@ -139,6 +139,7 @@ const CreateIncident = () => {
                   id="incidentTitle"
                   value={incident.Title}
                   onChange={(e) => setIncident({ ...incident, Title: e.target.value })}
+                  pattern="([A-Z][a-z]{1,14})(\s[A-Z][a-z]{1,14})*"
                 />
               </div>
               <div className="mb-3 col-md-4">
@@ -148,6 +149,7 @@ const CreateIncident = () => {
                   id="incidentDescription"
                   value={incident.Description}
                   onChange={(e) => setIncident({ ...incident, Description: e.target.value })}
+                  pattern="([A-Z][a-z]{1,14})(\s([A-Za-z][a-z]{1,14}))*"
                 />
               </div>
               <div className="mb-3 col-md-4">
@@ -158,6 +160,7 @@ const CreateIncident = () => {
                   id="incidentStatus"
                   value={incident.Status}
                   onChange={(e) => setIncident({ ...incident, Status: e.target.value })}
+                  pattern="^(High|Mild|Low)$"
                 />
               </div>
               <div className="mb-3 col-md-4">

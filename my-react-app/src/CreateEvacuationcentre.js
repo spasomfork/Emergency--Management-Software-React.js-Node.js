@@ -106,6 +106,9 @@ const CreateEvacuationCenter = () => {
                   id="evacuationCenterName"
                   value={evacuationCenter.Name}
                   onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Name: e.target.value })}
+                  pattern="^[A-Z][a-z]{1,14}$"
+                  title="Name should start with a capital letter, with only lowercase letters following, and be 2-15 characters long."
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -116,6 +119,9 @@ const CreateEvacuationCenter = () => {
                   id="evacuationCenterLocation"
                   value={evacuationCenter.Location}
                   onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Location: e.target.value })}
+                  pattern="^[A-Z][a-z]{1,19}$"
+                  title="Location should start with a capital letter, followed by lowercase letters, and be 2-20 characters long."
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -126,6 +132,10 @@ const CreateEvacuationCenter = () => {
                   id="evacuationCenterCapacity"
                   value={evacuationCenter.Capacity}
                   onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Capacity: e.target.value })}
+                  min="1"
+                  max="10000"
+                  title="Capacity must be a number between 1 and 10000."
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -136,6 +146,9 @@ const CreateEvacuationCenter = () => {
                   id="evacuationCenterAvailabilityStatus"
                   value={evacuationCenter.AvailabilityStatus}
                   onChange={(e) => setEvacuationCenter({ ...evacuationCenter, AvailabilityStatus: e.target.value })}
+                  pattern="^(Active|Deactive)$"
+                  title="Availability Status must be either 'Active' or 'Deactive', with the first letter capitalized."
+                  required
                 />
               </div>
               <div className="col-md-6">

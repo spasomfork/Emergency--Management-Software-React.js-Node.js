@@ -27,6 +27,8 @@ import NewsAlert from './NewsAlert';
 import ViewNewsAlert from './ViewNewsAlert';
 import Resource from './Resource';
 import CreateResource from './CreateResource';
+import EditResource from './EditResource';
+import Chat from './Chat';
 
 function App() {
   return (
@@ -60,6 +62,8 @@ function App() {
         <Route path="/resource-allocation" element={<Resource />} />
         <Route path="/resource-allocation" element={<Resource />} />
         <Route path="/create-resource" element={<CreateResource/>} />
+        <Route path="/edit-resource/:id" element={<EditResource/>} />
+        <Route path="/chat" element={<Chat/>} />
 
 
 

@@ -8,46 +8,83 @@ import {
     FaPhoneAlt, FaClipboardList, FaNewspaper, FaCogs, FaComments
 } from 'react-icons/fa';
 
-const EditHospital = () => {
+const EditResource = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { id } = useParams();
-    const [hospital, setHospital] = useState({
+    const [resource, setResource] = useState({
         Name: '',
-        Location: '',
-        Status: '',
-        Capacity: ''
+        Description: '',
+        Quantity: '',
+        Status: ''
     });
     const username = localStorage.getItem('username') || 'Guest';
 
     useEffect(() => {
-        const fetchHospital = async () => {
+        // Fetch resource data by ID
+        const fetchResource = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/hospitals/${id}`);
+                const response = await axios.get(`http://localhost:5000/resources/${id}`);
                 if (response.data) {
-                    setHospital(response.data);
+                    setResource(response.data);
                 } else {
-                    alert('Hospital not found');
-                    navigate('/hospitals');
+                    alert('Resource not found');
+                    navigate('/resources');
                 }
             } catch (error) {
-                console.error('Error fetching hospital:', error);
-                alert('Error fetching hospital');
+                console.error('Error fetching resource:', error);
+                alert('Error fetching resource');
             }
         };
 
-        fetchHospital();
+        fetchResource();
     }, [id, navigate]);
 
     const handleUpdate = async (e) => {
         e.preventDefault();
+
+        // Rule: Only allow update if resource status is 'open'
+        if (resource.Status !== 'open') {
+            alert('Resource can only be updated when its status is open.');
+            return;
+        }
+
         try {
-            await axios.put(`http://localhost:5000/hospitals/${id}`, hospital);
-            alert('Updated successfully');
-            navigate('/hospitals', { state: { username } });
+            await axios.put(`http://localhost:5000/resources/${id}`, resource);
+            alert('Resource updated successfully');
+            navigate('/resource-allocation', { state: { username } });
         } catch (error) {
-            console.error('Error updating hospital:', error.response?.data || error.message);
-            alert('Failed to update hospital. Please try again.');
+            console.error('Error updating resource:', error.response?.data || error.message);
+            alert('Failed to update resource. Please try again.');
+        }
+    };
+
+    const handleStatusChange = async (e) => {
+        e.preventDefault();
+        const newStatus = prompt('Enter new status (open, ongoing, completed, rejected):');
+
+        if (!['open', 'ongoing', 'completed', 'rejected'].includes(newStatus)) {
+            alert('Invalid status. Please enter one of: open, ongoing, completed, rejected.');
+            return;
+        }
+
+        // Rule: If status is 'completed' or 'rejected', it cannot be changed
+        if (resource.Status === 'completed') {
+            alert('Resource status cannot be changed once it is completed.');
+            return;
+        }
+        if (resource.Status === 'rejected') {
+            alert('Rejected resources cannot be edited.');
+            return;
+        }
+
+        try {
+            await axios.put(`http://localhost:5000/resources/${id}/status`, { newStatus });
+            alert('Resource status updated successfully');
+            navigate('/resource-allocation', { state: { username } });
+        } catch (error) {
+            console.error('Error updating resource status:', error.response?.data || error.message);
+            alert('Failed to update resource status. Please try again.');
         }
     };
 
@@ -117,9 +154,9 @@ const EditHospital = () => {
                 </div>
 
                 {/* Main content */}
-                <div className="main-content-evacuation-center-edit d-flex justify-content-center align-items-start">
-                    <div className="container" style={{ maxWidth: '80%' }}>
-                        <h2 className="mb-4">Edit Hospital</h2>
+                <div className="main-content-resource-edit">
+                    <div className="container mt-4">
+                        <h2 className="mb-4">Edit Resource</h2>
                         <form onSubmit={handleUpdate}>
                             <div className="form-group mb-3">
                                 <label htmlFor="name">Name:</label>
@@ -127,60 +164,47 @@ const EditHospital = () => {
                                     type="text"
                                     id="name"
                                     className="form-control"
-                                    value={hospital.Name}
-                                    onChange={(e) => setHospital({ ...hospital, Name: e.target.value })}
-                                    pattern="^[A-Z][a-z]{1,14}( [A-Z][a-z]{1,14})*$"
-                                    title="Name"
+                                    value={resource.Name}
+                                    onChange={(e) => setResource({ ...resource, Name: e.target.value })}
                                     required
+                                    pattern="^[A-Z][a-zA-Z\s]{1,24}$" // Name must start with a capital letter and can be 2-25 characters long
                                 />
                             </div>
 
                             <div className="form-group mb-3">
-                                <label htmlFor="location">Location:</label>
+                                <label htmlFor="description">Description:</label>
                                 <input
                                     type="text"
-                                    id="location"
+                                    id="description"
                                     className="form-control"
-                                    value={hospital.Location}
-                                    onChange={(e) => setHospital({ ...hospital, Location: e.target.value })}
-                                    pattern="^[A-Z][a-z]{1,14}$"
-                                    title="Location"
+                                    value={resource.Description}
+                                    onChange={(e) => setResource({ ...resource, Description: e.target.value })}
                                     required
+                                    pattern="^[A-Z][a-zA-Z\s]{1,24}$" // Description must start with a capital letter and can be 2-25 characters long
                                 />
                             </div>
 
                             <div className="form-group mb-3">
-                                <label htmlFor="status">Status:</label>
+                                <label htmlFor="quantity">Quantity:</label>
                                 <input
-                                    type="text"
-                                    id="status"
+                                    type="number"
+                                    id="quantity"
                                     className="form-control"
-                                    value={hospital.Status}
-                                    onChange={(e) => setHospital({ ...hospital, Status: e.target.value })}
-                                    pattern="^(Active|Deactive|Operational)$"
-                                    title="Status"
+                                    value={resource.Quantity}
+                                    onChange={(e) => setResource({ ...resource, Quantity: e.target.value })}
                                     required
-                                />
-                            </div>
-
-                            <div className="form-group mb-3">
-                                <label htmlFor="capacity">Capacity:</label>
-                                <input
-                                    type="text"
-                                    id="capacity"
-                                    className="form-control"
-                                    value={hospital.Capacity}
-                                    onChange={(e) => setHospital({ ...hospital, Capacity: e.target.value })}
-                                    pattern="^[1-9]\d{0,3}$|^10000$"
-                                    title="Capacity"
-                                    required
+                                    pattern="^(?:[2-9]|[1-9][0-9]|[1][0-0]{1,2})$" // Quantity must be a number from 2 to 1000
                                 />
                             </div>
 
                             <Button variant="primary" type="submit">
-                                Update
+                                Update Resource
                             </Button>
                         </form>
+
+                        <Button variant="warning" className="mt-3" onClick={handleStatusChange}>
+                            Change Resource Status
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -188,4 +212,4 @@ const EditHospital = () => {
     );
 };
 
-export default EditHospital;
+export default EditResource;

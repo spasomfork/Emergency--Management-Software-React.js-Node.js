@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Navbar, Nav, Dropdown, Button, Container, Form } from 'react-bootstrap';
+import { Navbar, Nav, Dropdown, Button, Container } from 'react-bootstrap';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaHome, FaUser, FaBell, FaExclamationCircle, FaHospital, FaCity, FaUserShield, FaTasks, FaPhoneAlt, FaClipboardList, FaNewspaper, FaCogs, FaComments } from 'react-icons/fa';
@@ -107,6 +107,8 @@ const CreateTask = () => {
                   id="taskTitle"
                   value={task.Title}
                   onChange={(e) => setTask({ ...task, Title: e.target.value })}
+                  pattern="^[A-Z][a-zA-Z\s]{1,24}$" // First letter capital, 2-25 characters, multiple words
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -116,6 +118,8 @@ const CreateTask = () => {
                   id="taskDescription"
                   value={task.Description}
                   onChange={(e) => setTask({ ...task, Description: e.target.value })}
+                  pattern="^[A-Z][a-zA-Z\s]{1,24}$" // First letter capital, 2-25 characters, multiple words
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
@@ -126,6 +130,8 @@ const CreateTask = () => {
                   id="taskAssignedTo"
                   value={task.AssignedTo}
                   onChange={(e) => setTask({ ...task, AssignedTo: e.target.value })}
+                  pattern="^[A-Z][a-zA-Z\s]{1,24}$" // First letter capital, 2-25 characters, multiple words
+                  required
                 />
               </div>
               <div className="mb-3 col-md-6">
