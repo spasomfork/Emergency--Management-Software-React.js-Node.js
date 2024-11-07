@@ -34,8 +34,7 @@ html, body, #root {
   margin-left: 250px; /* Aligns content next to the sidebar */
   margin-top: 50px;
   padding: 20px; /* Padding for the main content area */
-  width:100%; /* Full width minus sidebar width */
-  overflow-y: auto; /* Adds scroll to the content if it overflows */
+  width:80%; /* Full width minus sidebar width */
   background-color: #f8f9fa; /* Light background color for main content */
 }
 

@@ -24,6 +24,9 @@ const Dashboard = () => {
     damageReports: { low: 0, mild: 0, high: 0 }
   });
 
+
+  
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -41,6 +44,39 @@ const Dashboard = () => {
     localStorage.removeItem('username');
     navigate('/');
   };
+
+  const [weather, setWeather] = useState({});
+  const [search, setSearch] = useState('');
+
+  
+  const api = {
+    key: "9e43ec55218c3baf128d2122f5314c75",
+    base: "https://api.openweathermap.org/data/2.5/",
+  };
+
+  const searchPressed = () => {
+    fetch(`${api.base}weather?q=${search}&units=metric&APPID=${api.key}`)
+      .then((res) => res.json())
+      .then((result) => {
+        setWeather(result);
+      });
+  };
+
+      const [tasks, setTasks] = useState([]);
+      
+    useEffect(() => {
+      const fetchTasks = async () => {
+        try {
+          const response = await axios.get('http://localhost:5000/tasks');
+          setTasks(response.data);
+        } catch (error) {
+          console.error('Error fetching tasks:', error);
+        }
+      };
+  
+      fetchTasks();
+     
+    }, []);
 
   const navItems = [
     { path: '/dashboard', label: 'Dashboard', icon: <FaHome /> },
@@ -191,9 +227,59 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+       </div>
+
+       <div className="main-content">
+       <div className="row mt-4" >
+            <div className="col-md-5" >
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Assigned To</th>
+                    <th>Due Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tasks.map((task) => (
+                    <tr key={task.TaskID}>
+                      <td>{task.TaskID}</td>
+                      <td>{task.Title}</td>
+                      <td>{task.Description}</td>
+                      <td>{task.Status}</td>
+                      <td>{task.AssignedTo}</td>
+                      <td>{task.DueDate}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Weather Search */}
+            <div className="col-md-4" style={{ marginLeft: '200px' }}>
+              <h3>Weather Search</h3>
+              <input
+                type="text"
+                placeholder="Enter city/town..."
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <button onClick={searchPressed}>Search</button>
+              {typeof weather.main !== "undefined" && (
+                <div>
+                  <p>{weather.name}</p>
+                  <p>{weather.main.temp}°C</p>
+                  <p>{weather.weather[0].main}</p>
+                  <p>({weather.weather[0].description})</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  );
+     );
 };
 
 export default Dashboard;
