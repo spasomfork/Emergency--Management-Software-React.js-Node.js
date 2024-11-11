@@ -1,7 +1,19 @@
 const express = require('express');
+const axios = require('axios');
 
 module.exports = (db) => {
     const router = express.Router();
+
+    // Send a notification when an evacuation center is created, updated, or deleted
+    const sendNotification = async (message) => {
+        try {
+            await axios.post('http://localhost:5000/notifications', {
+                message,
+            });
+        } catch (error) {
+            console.error('Error sending notification:', error);
+        }
+    };
 
     // Get all evacuation centers
     router.get('/evacuation-centers', (req, res) => {
@@ -47,6 +59,7 @@ module.exports = (db) => {
                 console.error('Error creating evacuation center:', err);
                 return res.status(500).json({ message: 'Failed to create evacuation center' });
             }
+            sendNotification('A new evacuation center has been created');
             res.status(201).json({ message: 'Evacuation center created successfully', CenterID: results.insertId });
         });
     });
@@ -72,6 +85,7 @@ module.exports = (db) => {
                 return res.status(500).json({ message: 'Failed to update evacuation center' });
             }
             if (results.affectedRows > 0) {
+                sendNotification(`Evacuation Center ID ${id} has been updated`);
                 res.json({ message: 'Evacuation center updated successfully' });
             } else {
                 res.status(404).json({ message: 'Evacuation center not found' });
@@ -89,6 +103,7 @@ module.exports = (db) => {
                 return res.status(500).json({ message: 'Failed to delete evacuation center' });
             }
             if (results.affectedRows > 0) {
+                sendNotification(`Evacuation Center ID ${id} has been deleted`);
                 res.json({ message: 'Evacuation center deleted successfully' });
             } else {
                 res.status(404).json({ message: 'Evacuation center not found' });

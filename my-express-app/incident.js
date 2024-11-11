@@ -1,7 +1,19 @@
 const express = require('express');
+const axios = require('axios');
 
 module.exports = (db) => {
     const router = express.Router();
+
+    // Send a notification when an incident is created, updated, or deleted
+    const sendNotification = async (message) => {
+        try {
+            await axios.post('http://localhost:5000/notifications', {
+                message,  // Only send message
+            });
+        } catch (error) {
+            console.error('Error sending notification:', error);
+        }
+    };
 
     // Get all incidents
     router.get('/incidents', (req, res) => {
@@ -32,8 +44,8 @@ module.exports = (db) => {
         });
     });
 
-      // Create an incident
-      router.post('/incidents', (req, res) => {
+    // Create an incident
+    router.post('/incidents', (req, res) => {
         const { Title, Description, Status, Date, Latitude, Longitude } = req.body;
         const query = `
             INSERT INTO incident (Title, Description, Status, Date, Latitude, Longitude)
@@ -44,6 +56,7 @@ module.exports = (db) => {
                 console.error('Error creating incident:', err.sqlMessage || err);
                 return res.status(500).json({ message: 'Failed to create incident' });
             }
+            sendNotification('A new incident has been created');
             res.status(201).json({ message: 'Incident created successfully', incidentId: results.insertId });
         });
     });
@@ -63,6 +76,7 @@ module.exports = (db) => {
                 return res.status(500).json({ message: 'Failed to update incident' });
             }
             if (results.affectedRows > 0) {
+                sendNotification(`Incident ID ${id} has been updated`);
                 res.json({ message: 'Incident updated successfully' });
             } else {
                 res.status(404).json({ message: 'Incident not found' });
@@ -80,6 +94,7 @@ module.exports = (db) => {
                 return res.status(500).json({ message: 'Failed to delete incident' });
             }
             if (results.affectedRows > 0) {
+                sendNotification(`Incident ID ${id} has been deleted`);
                 res.json({ message: 'Incident deleted successfully' });
             } else {
                 res.status(404).json({ message: 'Incident not found' });

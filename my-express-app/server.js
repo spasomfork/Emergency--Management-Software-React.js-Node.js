@@ -56,6 +56,7 @@ const newsalertRoutes = require('./newsalert')(db);
 const resourceRoutes = require('./resource')(db);
 const chatRoutes = require('./chat')(db);
 const dashboardRoutes = require('./dashboard')(db);
+const notification = require('./notification')(db);
 
 app.use(loginRoutes);
 app.use(registerRoutes);
@@ -70,6 +71,7 @@ app.use(newsalertRoutes);
 app.use(resourceRoutes);
 app.use(chatRoutes);
 app.use(dashboardRoutes);
+app.use(notification);
 
 // Start the server using HTTP
 const server = http.createServer(app);

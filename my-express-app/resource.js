@@ -1,7 +1,19 @@
 const express = require('express');
+const axios = require('axios');
 
 module.exports = (db) => {
     const router = express.Router();
+
+    // Send a notification when a resource is created, updated, or deleted
+    const sendNotification = async (message) => {
+        try {
+            await axios.post('http://localhost:5000/notifications', {
+                message,  // Only send message
+            });
+        } catch (error) {
+            console.error('Error sending notification:', error);
+        }
+    };
 
     // Get all resources
     router.get('/resources', (req, res) => {
@@ -47,6 +59,8 @@ module.exports = (db) => {
                 console.error('Error creating resource:', err);
                 return res.status(500).json({ message: 'Failed to create resource' });
             }
+            // Send notification on successful creation
+            sendNotification('A new resource has been created');
             res.status(201).json({ message: 'Resource created successfully', ResourceID: results.insertId });
         });
     });
@@ -76,6 +90,8 @@ module.exports = (db) => {
                 // No rows affected, meaning resource status is not 'open'
                 return res.status(400).json({ message: 'Resource can only be updated when its status is open' });
             }
+            // Send notification on successful update
+            sendNotification(`Resource ID ${id} has been updated`);
             res.json({ message: 'Resource updated successfully' });
         });
     });
@@ -120,6 +136,8 @@ module.exports = (db) => {
                     console.error('Error updating resource status:', updateErr);
                     return res.status(500).json({ message: 'Failed to update resource status' });
                 }
+                // Send notification on successful status change
+                sendNotification(`Resource ID ${id} status updated to ${newStatus}`);
                 res.json({ message: 'Resource status updated successfully' });
             });
         });
@@ -135,6 +153,8 @@ module.exports = (db) => {
                 return res.status(500).json({ message: 'Failed to delete resource' });
             }
             if (results.affectedRows > 0) {
+                // Send notification on successful deletion
+                sendNotification(`Resource ID ${id} has been deleted`);
                 res.json({ message: 'Resource deleted successfully' });
             } else {
                 res.status(404).json({ message: 'Resource not found' });

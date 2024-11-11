@@ -1,7 +1,19 @@
 const express = require('express');
+const axios = require('axios');
 
 module.exports = (db) => {
   const router = express.Router();
+
+  // Send a notification when a task is created, updated, or deleted
+  const sendNotification = async (message) => {
+    try {
+      await axios.post('http://localhost:5000/notifications', {
+        message,  // Only send message
+      });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
 
   // Get all tasks
   router.get('/tasks', (req, res) => {
@@ -47,6 +59,8 @@ module.exports = (db) => {
         console.error('Error creating task:', err);
         return res.status(500).json({ message: 'Failed to create task' });
       }
+      // Send notification on successful creation
+      sendNotification('A new task has been created');
       res.status(201).json({ message: 'Task created successfully', TaskID: results.insertId });
     });
   });
@@ -68,6 +82,8 @@ module.exports = (db) => {
         return res.status(500).json({ message: 'Failed to update task status' });
       }
       if (results.affectedRows > 0) {
+        // Send notification on successful update
+        sendNotification(`Task ID ${id} status updated to ${Status}`);
         res.json({ message: 'Task status updated successfully' });
       } else {
         res.status(404).json({ message: 'Task not found' });
@@ -85,6 +101,8 @@ module.exports = (db) => {
         return res.status(500).json({ message: 'Failed to delete task' });
       }
       if (results.affectedRows > 0) {
+        // Send notification on successful deletion
+        sendNotification(`Task ID ${id} has been deleted`);
         res.json({ message: 'Task deleted successfully' });
       } else {
         res.status(404).json({ message: 'Task not found' });

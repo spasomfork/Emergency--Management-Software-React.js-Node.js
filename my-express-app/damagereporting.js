@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const mime = require('mime-types');
+const axios = require('axios');
 
 // Multer setup for file upload
 const storage = multer.memoryStorage();
@@ -8,6 +9,17 @@ const upload = multer({ storage: storage });
 
 module.exports = (db) => {
     const router = express.Router();
+
+    // Send a notification when a damage report is created, updated, or deleted
+    const sendNotification = async (message) => {
+        try {
+            await axios.post('http://localhost:5000/notifications', {
+                message,  // Only send message
+            });
+        } catch (error) {
+            console.error('Error sending notification:', error);
+        }
+    };
 
     // Get all damage reports
     router.get('/damagereports', (req, res) => {
@@ -73,6 +85,8 @@ module.exports = (db) => {
                 console.error('Error creating damage report:', err.sqlMessage || err);
                 return res.status(500).json({ message: 'Failed to create damage report' });
             }
+            // Send notification on successful creation
+            sendNotification('A new damage report has been created');
             res.status(201).json({ message: 'Damage report created successfully', reportId: results.insertId });
         });
     });
@@ -87,6 +101,8 @@ module.exports = (db) => {
                 return res.status(500).json({ message: 'Failed to delete damage report' });
             }
             if (results.affectedRows > 0) {
+                // Send notification on successful deletion
+                sendNotification(`Damage report ID ${id} has been deleted`);
                 res.json({ message: 'Damage report deleted successfully' });
             } else {
                 res.status(404).json({ message: 'Damage report not found' });
