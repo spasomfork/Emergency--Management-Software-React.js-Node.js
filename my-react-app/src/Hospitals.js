@@ -1,8 +1,10 @@
+// Hospital.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { role } from './Navbar';  // Import role
 
 const Hospital = () => {
   const [hospitals, setHospitals] = useState([]);
@@ -48,18 +50,16 @@ const Hospital = () => {
       <div className="container mt-1">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2>Hospitals</h2>
-          <div>
-            <Button
-              variant="success"
-              onClick={handleCreateCSV}
-              style={{ marginRight: '10px' }}
-            >
-              Add New Hospital by CSV Upload
-            </Button>
-            <Button variant="success" onClick={handleCreate}>
-              Add New Hospital
-            </Button>
-          </div>
+          {role === 'Admin' && (
+            <div>
+              <Button variant="success" onClick={handleCreateCSV} style={{ marginRight: '10px' }}>
+                Add New Hospital by CSV Upload
+              </Button>
+              <Button variant="success" onClick={handleCreate}>
+                Add New Hospital
+              </Button>
+            </div>
+          )}
         </div>
         <table className="table table-striped">
           <thead>
@@ -69,7 +69,7 @@ const Hospital = () => {
               <th>Location</th>
               <th>Status</th>
               <th>Capacity</th>
-              <th>Actions</th>
+              {role === 'Admin' && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -80,20 +80,16 @@ const Hospital = () => {
                 <td>{hospital.Location}</td>
                 <td>{hospital.Status}</td>
                 <td>{hospital.Capacity}</td>
-                <td>
-                  <button
-                    className="btn btn-danger me-2"
-                    onClick={() => handleDelete(hospital.HospitalID)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleEdit(hospital.HospitalID)}
-                  >
-                    Edit
-                  </button>
-                </td>
+                {role === 'Admin' && (
+                  <td>
+                    <button className="btn btn-danger me-2" onClick={() => handleDelete(hospital.HospitalID)}>
+                      Delete
+                    </button>
+                    <button className="btn btn-primary" onClick={() => handleEdit(hospital.HospitalID)}>
+                      Edit
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

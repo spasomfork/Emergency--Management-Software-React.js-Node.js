@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { role } from './Navbar';  // Import role
 
 const RoleManagement = () => {
   const [personnel, setPersonnel] = useState([]);
-  
+
   useEffect(() => {
     const fetchPersonnel = async () => {
       try {
@@ -51,7 +52,7 @@ const RoleManagement = () => {
             <th>Status</th>
             <th>Contact Number</th>
             <th>Role</th>
-            <th>Actions</th>
+            {role === 'Admin' && <th>Actions</th>} {/* Only show actions if role is Admin */}
           </tr>
         </thead>
         <tbody>
@@ -62,24 +63,29 @@ const RoleManagement = () => {
               <td>{person.Status}</td>
               <td>{person.ContactInformation}</td>
               <td>
-                <select 
-                  value={person.Role} 
-                  onChange={(e) => handleRoleChange(person.PersonnelID, e.target.value)}
-                >
-                  <option value="Admin">Admin</option>
-                  <option value="Manager">Manager</option>
-                  <option value="Affected People">Affected People</option>
-                  <option value="Relief Organizations">Relief Organizations</option>
-                </select>
+                {role === 'Admin' ? (  // Only allow Admin to change roles
+                  <select 
+                    value={person.Role} 
+                    onChange={(e) => handleRoleChange(person.PersonnelID, e.target.value)}
+                  >
+                    <option value="Admin">Admin</option>
+                    <option value="Affected People">Affected People</option>
+                    <option value="Relief Organizations">Relief Organizations</option>
+                  </select>
+                ) : (
+                  <span>{person.Role}</span>  // Display role as text for non-admin users
+                )}
               </td>
-              <td>
-                <button
-                  className="btn btn-danger me-2"
-                  onClick={() => handleDelete(person.PersonnelID)}
-                >
-                  Delete
-                </button>
-              </td>
+              {role === 'Admin' && (  // Only show delete button for Admin
+                <td>
+                  <button
+                    className="btn btn-danger me-2"
+                    onClick={() => handleDelete(person.PersonnelID)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

@@ -72,7 +72,7 @@ const Dashboard = () => {
               <div className="card-header">Hospitals</div>
               <div className="card-body d-flex justify-content-between">
                 <h5 className="card-title">Total: {dashboardData.hospitals.totalHospitals}</h5>
-                <h5 className="card-title">Active: {dashboardData.activeHospitals.activeHospitals}</h5>
+                <h5 className="card-title">Total Active Capacity: {dashboardData.activeHospitals.activeHospitals}</h5>
               </div>
             </div>
           </div>

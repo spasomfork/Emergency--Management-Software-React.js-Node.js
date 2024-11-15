@@ -21,6 +21,7 @@ const Login = () => {
       if (response.data.user) {
         // Save the username to localStorage
         localStorage.setItem('username', response.data.user.Name);
+        localStorage.setItem('userID', response.data.user.PersonnelID);
         navigate('/dashboard');
       } else {
         alert(response.data.message || 'Login failed. Please try again.');

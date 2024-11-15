@@ -1,8 +1,11 @@
+// CustomNavbar.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar as BootstrapNavbar, Nav, Dropdown, Button, Container } from 'react-bootstrap';
 import { FaUser, FaBell, FaTrash } from 'react-icons/fa';
 import axios from 'axios';
+
+let role = '';  // Declare a global variable to store the role
 
 const CustomNavbar = () => {
   const navigate = useNavigate();
@@ -11,6 +14,22 @@ const CustomNavbar = () => {
   const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
+
+
+    // Fetch role of the logged-in user
+    const fetchRole = async () => {
+      try {
+        const personnelId = localStorage.getItem('userID');
+        console.log("Personnel ID:", personnelId);
+        const response = await axios.get(`http://localhost:5000/personnel/role/${personnelId}`);
+        role = response.data.role;  // Assign role to the global variable
+      } catch (error) {
+        console.error('Error fetching role:', error);
+      }
+    };
+
+    fetchRole();
+
     // Fetch notifications when the component mounts
     const fetchNotifications = async () => {
       try {
@@ -49,6 +68,7 @@ const CustomNavbar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('username');
+    localStorage.removeItem('userID');
     navigate('/'); // Redirect to login page
   };
 
@@ -100,4 +120,5 @@ const CustomNavbar = () => {
   );
 };
 
+export { role };  // Export the role variable
 export default CustomNavbar;

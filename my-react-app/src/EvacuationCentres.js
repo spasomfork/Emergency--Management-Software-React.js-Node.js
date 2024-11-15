@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { role } from './Navbar';  // Import role
 
 const EvacuationCenter = () => {
   const [centers, setCenters] = useState([]);
@@ -46,7 +47,9 @@ const EvacuationCenter = () => {
       <div className="container mt-4">
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2>Evacuation Centers</h2>
-          <Button variant="success" onClick={handleCreate}>Add New Evacuation Center</Button>
+          {(role === 'Admin' || role === 'Relief Organizations') && (
+            <Button variant="success" onClick={handleCreate}>Add New Evacuation Center</Button>
+          )}
         </div>
         <table className="table table-striped">
           <thead>
@@ -56,7 +59,7 @@ const EvacuationCenter = () => {
               <th>Location</th>
               <th>Capacity</th>
               <th>Availability Status</th>
-              <th>Actions</th>
+              {(role === 'Admin' || role === 'Relief Organizations') && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -67,10 +70,12 @@ const EvacuationCenter = () => {
                 <td>{center.Location}</td>
                 <td>{center.Capacity}</td>
                 <td>{center.AvailabilityStatus}</td>
-                <td>
-                  <Button variant="primary" className="me-2" onClick={() => handleEdit(center.CenterID)}>Edit</Button>
-                  <Button variant="danger" onClick={() => handleDelete(center.CenterID)}>Delete</Button>
-                </td>
+                {(role === 'Admin' || role === 'Relief Organizations') && (
+                  <td>
+                    <Button variant="primary" className="me-2" onClick={() => handleEdit(center.CenterID)}>Edit</Button>
+                    <Button variant="danger" onClick={() => handleDelete(center.CenterID)}>Delete</Button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

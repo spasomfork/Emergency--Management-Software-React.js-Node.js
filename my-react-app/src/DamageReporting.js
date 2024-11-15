@@ -5,10 +5,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { role } from './Navbar';  // Import role
 
 const DamageReporting = () => {
   const [reports, setReports] = useState([]);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     const fetchDamageReports = async () => {
@@ -55,7 +57,7 @@ const DamageReporting = () => {
               <th>Property</th>
               <th>Name</th>
               <th>Photo</th>
-              <th>Actions</th>
+              {role === 'Admin' && <th>Actions</th>} {/* Only show Actions column for Admin */}
             </tr>
           </thead>
           <tbody>
@@ -81,14 +83,16 @@ const DamageReporting = () => {
                     />
                   )}
                 </td>
-                <td>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(report.ReportID)}
-                  >
-                    Delete
-                  </button>
-                </td>
+                {role === 'Admin' && (  // Show Delete button only for Admin
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(report.ReportID)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

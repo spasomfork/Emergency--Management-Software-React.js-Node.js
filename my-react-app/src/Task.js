@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import axios from 'axios';
+import { role } from './Navbar';  // Import role
 
 const TaskManagement = () => {
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
   const username = localStorage.getItem('username') || 'Guest';
+  
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -64,7 +66,7 @@ const TaskManagement = () => {
             <th>Status</th>
             <th>Assigned To</th>
             <th>Due Date</th>
-            <th>Actions</th>
+            {role === 'Admin' && <th>Actions</th>} {/* Only show Actions column for Admin */}
             <th>Mark Complete</th>
           </tr>
         </thead>
@@ -77,9 +79,11 @@ const TaskManagement = () => {
               <td>{task.Status}</td>
               <td>{task.AssignedTo}</td>
               <td>{task.DueDate}</td>
-              <td>
-                <Button variant="danger" onClick={() => handleDelete(task.TaskID)}>Delete</Button>
-              </td>
+              {role === 'Admin' && (
+                <td>
+                  <Button variant="danger" onClick={() => handleDelete(task.TaskID)}>Delete</Button>
+                </td>
+              )}
               <td>
                 <Form.Check 
                   type="checkbox"

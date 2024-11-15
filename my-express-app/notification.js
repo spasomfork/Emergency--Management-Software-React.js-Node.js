@@ -87,5 +87,23 @@ module.exports = (db) => {
         });
     });
 
+
+    // Get role of a personnel by ID
+router.get('/personnel/role/:id', (req, res) => {
+    const { id } = req.params;
+    const query = 'SELECT Role FROM personnel WHERE PersonnelID = ?';
+    db.query(query, [id], (err, results) => {
+        if (err) {
+            console.error('Error fetching role:', err);
+            return res.status(500).json({ message: 'Failed to retrieve role' });
+        }
+        if (results.length > 0) {
+            res.json({ role: results[0].Role });
+        } else {
+            res.status(404).json({ message: 'Personnel not found' });
+        }
+    });
+});
+
     return router;
 };

@@ -1,7 +1,19 @@
 const express = require('express');
+const axios = require('axios');
 
 module.exports = (db) => {
     const router = express.Router();
+
+    // Send a notification when a personnel's role is updated or deleted
+    const sendNotification = async (message) => {
+        try {
+            await axios.post('http://localhost:5000/notifications', {
+                message,  // Only send message
+            });
+        } catch (error) {
+            console.error('Error sending notification:', error);
+        }
+    };
 
     // Get all personnel
     router.get('/personnel', (req, res) => {
@@ -26,7 +38,13 @@ module.exports = (db) => {
                 console.error('Error updating personnel:', err);
                 return res.status(500).json({ message: 'Failed to update personnel' });
             }
-            res.json({ message: 'Personnel role updated successfully' });
+            if (results.affectedRows > 0) {
+                // Send notification on successful role update
+                sendNotification(`Personnel ID ${id} role updated to ${Role}`);
+                res.json({ message: 'Personnel role updated successfully' });
+            } else {
+                res.status(404).json({ message: 'Personnel not found' });
+            }
         });
     });
 
@@ -40,6 +58,8 @@ module.exports = (db) => {
                 return res.status(500).json({ message: 'Failed to delete personnel' });
             }
             if (results.affectedRows > 0) {
+                // Send notification on successful deletion
+                sendNotification(`Personnel ID ${id} has been deleted`);
                 res.json({ message: 'Personnel deleted successfully' });
             } else {
                 res.status(404).json({ message: 'Personnel not found' });
