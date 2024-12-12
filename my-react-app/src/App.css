@@ -104,10 +104,9 @@
 
 .main-content-damage-report{
   margin-top:10px;  /* Ensure it's moved below the navbar */
-  padding: 20px;
-  width:100%;
+  padding: 10px;
+  width:80%;
   background-color: #f8f9fa;
-  overflow-y: auto;
   height:100vh;
 }
 

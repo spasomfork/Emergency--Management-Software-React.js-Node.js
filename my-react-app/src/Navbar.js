@@ -48,7 +48,7 @@ const CustomNavbar = () => {
     const interval = setInterval(() => {
       console.log('Checking for new notifications...');
       fetchNotifications();
-    }, 5000); // 10000ms = 10 seconds
+    }, 10000); // 10000ms = 10 seconds
 
     // Cleanup the interval on unmount
     return () => clearInterval(interval);

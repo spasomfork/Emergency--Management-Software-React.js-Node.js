@@ -80,7 +80,7 @@ const CreateDamageReport = () => {
   return (
     <div className="d-flex flex-column h-100">
       {/* Main content */}
-      <div className="main-content-damage-report" style={{ maxWidth: '100%',  marginTop: '20px', marginRight:'5px' }}>
+      <div className="main-content-damage-report" style={{ marginTop: '20px' }}>
         <div className="container mt-4">
           <h2 className="mb-4">Create Damage Report</h2>
           <form onSubmit={handleCreate} className="row justify-content-center">

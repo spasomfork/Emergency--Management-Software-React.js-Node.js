@@ -90,7 +90,7 @@ const EditHospital = () => {
                         className="form-control"
                         value={hospital.Status}
                         onChange={(e) => setHospital({ ...hospital, Status: e.target.value })}
-                        pattern="^(Active|Deactive|Operational)$"
+                        pattern="^(Active|Deactive)$"
                         title="Status"
                         required
                     />

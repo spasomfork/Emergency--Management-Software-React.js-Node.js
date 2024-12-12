@@ -7,6 +7,7 @@ const session = require('express-session');
 const app = express();
 const port = 5000;
 
+
 // Enable CORS for all routes
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -14,8 +15,9 @@ app.use(cors({
 }));
 
 // Middleware to parse JSON
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
+
 
 // Set up MySQL connection
 const db = mysql.createConnection({

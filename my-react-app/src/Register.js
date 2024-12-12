@@ -75,6 +75,9 @@ const Register = () => {
                   className="form-control"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{11,}$"
+                  title="Password must be more than 10 characters, and include at least one symbol, one uppercase letter, one lowercase letter, and one number."
+                  required
                 />
               </div>
               <div className="form-group mb-3">
@@ -88,12 +91,17 @@ const Register = () => {
               </div>
               <div className="form-group mb-3">
                 <label>Role:</label>
-                <input
-                  type="text"
+                <select
                   className="form-control"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                />
+                  required
+                >
+                  <option value="" disabled>Select your role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Relief Organizations">Relief Organizations</option>
+                  <option value="Affected People">Affected People</option>
+                </select>
               </div>
               <button type="submit" className="btn btn-primary w-100">Register</button>
             </form>

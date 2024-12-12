@@ -79,8 +79,13 @@ module.exports = (db) => {
         let { ServiceName, ContactNumber } = req.body;
 
         // Trim the input values
-        ServiceName = ServiceName.trim();
         ContactNumber = ContactNumber.trim();
+        ServiceName = ServiceName;
+        
+        // Validate required fields
+        if (!ServiceName || !ContactNumber) {
+            return res.status(400).json({ message: 'Please provide all required fields: ServiceName and ContactNumber' });
+        }
 
         const query = 'UPDATE lifelinenumber SET ServiceName = ?, ContactNumber = ? WHERE NumberID = ?';
         db.query(query, [ServiceName, ContactNumber, id], (err, results) => {

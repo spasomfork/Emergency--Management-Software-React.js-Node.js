@@ -5,7 +5,10 @@ const axios = require('axios');
 
 // Multer setup for file upload
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 100 * 1024 * 1024 } // 10MB limit
+  });
 
 module.exports = (db) => {
     const router = express.Router();
@@ -29,18 +32,16 @@ module.exports = (db) => {
                 console.error('Error fetching damage reports:', err);
                 return res.status(500).json({ message: 'Failed to retrieve damage reports' });
             }
-
-            // Convert photo buffer to Base64 data with MIME type
+    
             const reportsWithImages = results.map(report => {
                 if (report.Photo) {
-                    // Assume MIME type is JPEG for this example; adjust if needed
-                    const mimeType = 'image/jpeg'; // Update this according to the image type stored in your database
+                    const mimeType = report.PhotoMimeType || 'image/jpeg';
                     const base64Image = `data:${mimeType};base64,${report.Photo.toString('base64')}`;
                     return { ...report, Photo: base64Image };
                 }
                 return report;
             });
-
+    
             res.json(reportsWithImages);
         });
     });
@@ -70,22 +71,18 @@ module.exports = (db) => {
     // Create a new damage report
     router.post('/damagereports', upload.single('Photo'), (req, res) => {
         const { DamageDescription, Severity, Property, Name, Latitude, Longitude } = req.body;
-        const Photo = req.file ? req.file.buffer : null; // Extract the file data
-
-        if (!Property) {
-            return res.status(400).json({ message: 'Property cannot be null' });
-        }
-
+        const Photo = req.file ? req.file.buffer : null;
+        const PhotoMimeType = req.file ? req.file.mimetype : null;
+    
         const query = `
-            INSERT INTO damagereport (DamageDescription, Severity, Property, Name, Latitude, Longitude, Photo)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO damagereport (DamageDescription, Severity, Property, Name, Latitude, Longitude, Photo, PhotoMimeType)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        db.query(query, [DamageDescription, Severity, Property, Name, Latitude, Longitude, Photo], (err, results) => {
+        db.query(query, [DamageDescription, Severity, Property, Name, Latitude, Longitude, Photo, PhotoMimeType], (err, results) => {
             if (err) {
                 console.error('Error creating damage report:', err.sqlMessage || err);
                 return res.status(500).json({ message: 'Failed to create damage report' });
             }
-            // Send notification on successful creation
             sendNotification('A new damage report has been created');
             res.status(201).json({ message: 'Damage report created successfully', reportId: results.insertId });
         });

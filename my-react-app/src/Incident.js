@@ -57,6 +57,8 @@ const Incident = () => {
             <th>#</th>
             <th>Title</th>
             <th>Status</th>
+            <th>Description</th>
+            <th>Date</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -66,10 +68,12 @@ const Incident = () => {
               <td>{incident.IncidentID}</td>
               <td>{incident.Title}</td>
               <td>{incident.Status}</td>
+              <td>{incident.Description}</td>
+              <td>{incident.Date}</td>
               <td>
                 <button
                   className="btn btn-primary mr-2"
-                  onClick={() => handleEdit(incident.IncidentID)}
+                  onClick={() => handleEdit(incident.IncidentID)}  style={{ marginRight: '10px' }}
                 >
                   Edit
                 </button>

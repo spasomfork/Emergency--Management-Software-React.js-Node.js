@@ -51,9 +51,7 @@ const CreateResource = () => {
             onChange={(e) => setResource({ ...resource, Status: e.target.value })}
           >
             <option value="open">Open</option>
-            <option value="ongoing">Ongoing</option>
-            <option value="completed">Completed</option>
-            <option value="rejected">Rejected</option>
+            
           </select>
         </div>
         <div className="mb-3 col-md-6">

@@ -5,12 +5,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { role } from './Navbar';  // Import role
+import { role } from './Navbar'; // Import role
 
 const DamageReporting = () => {
   const [reports, setReports] = useState([]);
   const navigate = useNavigate();
-  
 
   useEffect(() => {
     const fetchDamageReports = async () => {
@@ -69,21 +68,17 @@ const DamageReporting = () => {
                 <td>{report.Property}</td>
                 <td>{report.Name}</td>
                 <td>
-                  {report.Photo ? (
-                    <img
-                      src={report.Photo}
-                      alt="Damage"
-                      style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                    />
-                  ) : (
-                    <img
-                      src="https://via.placeholder.com/100"
-                      alt="No Photo"
-                      style={{ width: '100px', height: '100px' }}
-                    />
-                  )}
-                </td>
-                {role === 'Admin' && (  // Show Delete button only for Admin
+                  <img
+                   src={report.Photo}
+                    alt="Damage"
+                       style={{
+                        width: '100px',
+                        height: '100px',
+                        objectFit: 'contain', // Ensure the entire image is shown without distortion
+                        }}
+                      />
+                    </td>
+                {role === 'Admin' && ( // Show Delete button only for Admin
                   <td>
                     <button
                       className="btn btn-danger"

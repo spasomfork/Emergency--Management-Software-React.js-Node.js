@@ -1,15 +1,15 @@
 const express = require('express');
-const axios = require('axios');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+// Simple in-memory cache for responses
+const responseCache = {};
 
 module.exports = (db) => {
   const router = express.Router();
 
-  const SQL_MILLENNIALS_API_URL = 'https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-1B';
-  const SQL_MILLENNIALS_API_KEY = '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'; // Replace with your actual API key
-  const axiosConfig = {
-    headers: { Authorization: `Bearer ${SQL_MILLENNIALS_API_KEY}` },
-    timeout: 10000, // Adjust timeout as needed
-  };
+  // Initialize Google Generative AI SDK
+  const genAI = new GoogleGenerativeAI('AIzaSyA2jWWRG4x88ODe7ehiYk1GZdJehJYroc0'); // Replace with your API key
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   // Predefined questions and corresponding SQL queries
   const predefinedQueries = {
@@ -24,7 +24,7 @@ module.exports = (db) => {
     'Get Average Capacity of Hospitals': 'SELECT AVG(Capacity) AS AverageCapacity FROM hospital;',
     'Find Maximum Capacity of Evacuation Centers': 'SELECT MAX(Capacity) AS MaxCapacity FROM evacuationcenter;',
     'Get Total Number of Resources': 'SELECT SUM(Quantity) AS TotalResources FROM resource;',
-    'Get All Personnel with Role "Admin"': 'SELECT * FROM personnel WHERE Role = "Amdin";',
+    'Get All Personnel with Role "Admin"': 'SELECT * FROM personnel WHERE Role = "Admin";',
     'Get All Personnel with Role "Relief Organization"': 'SELECT * FROM personnel WHERE Role = "Relief Organization";',
     'Get All Personnel with Role "User"': 'SELECT * FROM personnel WHERE Role = "User";',
     'Find Volunteers with Availability Not Equal to "Available"': 'SELECT * FROM volunteer WHERE Availability != "Available";',
@@ -42,32 +42,49 @@ module.exports = (db) => {
     return sqlKeywords.some(keyword => lowercaseQuery.includes(keyword)) || predefinedQueries[query] ? 'sql' : 'conversation';
   }
 
-  async function generateConversationalResponse(query, retries = 3) {
-    const HUGGING_FACE_API_URL = 'https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-1B';
-    const HUGGING_FACE_API_KEY = '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'; // Replace with your actual API key
-    const axiosConfigConversation = {
-      headers: { Authorization: `Bearer ${HUGGING_FACE_API_KEY}` },
-      timeout: 10000,
-    };
+  async function generateConversationalResponse(query) {
+    // Check if the response is cached
+    if (responseCache[query]) {
+      return responseCache[query];
+    }
 
-    for (let attempt = 1; attempt <= retries; attempt++) {
-      try {
-        const response = await axios.post(HUGGING_FACE_API_URL, { inputs: query }, axiosConfigConversation);
-        return response.data[0]?.generated_text.trim() || "I'm here to help with your questions!";
-      } catch (error) {
-        if (attempt === retries) throw new Error("Failed to generate conversation response: " + error.message);
-        await new Promise(resolve => setTimeout(resolve, 5000));
+    try {
+      // Call the model to generate a conversational response
+      const result = await model.generateContent(query);
+
+      // Log the full response to inspect its structure
+      console.log('API Response:', result);
+
+      // The text is now a function, so we need to invoke it
+      const textResponse = result?.response?.text;
+
+      if (typeof textResponse === 'function') {
+        // If it's a function, invoke it to get the response text
+        const responseMessage = textResponse();
+        // Cache the response
+        responseCache[query] = responseMessage;
+        return responseMessage;
+      } else {
+        throw new Error('Unexpected response structure: textResponse is not a function');
       }
+    } catch (error) {
+      console.error('Error generating conversational response:', error.message);
+      throw new Error('Failed to generate conversation response.');
     }
   }
 
   async function logChatMessage(userID, message) {
-    return new Promise((resolve, reject) => {
-      db.query(`INSERT INTO chat (UserID, Message, Timestamp) VALUES (?, ?, NOW())`, [userID, message], (err) => {
-        if (err) reject(err);
-        resolve();
+    // Log asynchronously to avoid blocking API response
+    try {
+      await new Promise((resolve, reject) => {
+        db.query(`INSERT INTO chat (UserID, Message, Timestamp) VALUES (?, ?, NOW())`, [userID, message], (err) => {
+          if (err) reject(err);
+          resolve();
+        });
       });
-    });
+    } catch (err) {
+      console.error('Error logging chat message:', err);
+    }
   }
 
   router.post('/chat/ask', async (req, res) => {
@@ -83,7 +100,8 @@ module.exports = (db) => {
 
       if (queryType === 'conversation') {
         const responseMessage = await generateConversationalResponse(userQuery);
-        await logChatMessage(userID, responseMessage);
+        // Log asynchronously while sending the response
+        logChatMessage(userID, responseMessage); 
         return res.json({ message: responseMessage });
 
       } else if (queryType === 'sql') {
@@ -93,14 +111,14 @@ module.exports = (db) => {
 
         console.log('Executing SQL Query:', sqlQuery);
 
-        db.query(sqlQuery, (err, results) => {
+        db.query(sqlQuery, async (err, results) => {
           if (err) {
             console.error('SQL Execution Error:', err);
             return res.status(500).json({ message: 'Failed to execute SQL query' });
           }
 
           const responseMessage = JSON.stringify(results);
-          logChatMessage(userID, responseMessage); // Log response
+          logChatMessage(userID, responseMessage); // Log asynchronously
           res.json({ message: responseMessage });
         });
       }

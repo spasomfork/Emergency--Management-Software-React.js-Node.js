@@ -86,7 +86,7 @@ const EditIncident = () => {
                             className="form-control"
                             value={incident.Title}
                             onChange={(e) => setIncident({ ...incident, Title: e.target.value })}
-                            pattern="([A-Z][a-z]{1,14})(\s[A-Z][a-z]{1,14})*"
+                            pattern="([A-Z][a-z]{1,14})(\s([A-Za-z][a-z]{1,14}))*"
                             required
                         />
                     </div>
