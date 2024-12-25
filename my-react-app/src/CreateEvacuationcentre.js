@@ -41,7 +41,7 @@ const CreateEvacuationCenter = () => {
                 id="evacuationCenterName"
                 value={evacuationCenter.Name}
                 onChange={(e) => setEvacuationCenter({ ...evacuationCenter, Name: e.target.value })}
-                pattern="^[A-Z][a-z]{1,14}$"
+                pattern="^[A-Z][a-z]{1,14}( [A-Z][a-z]{1,14})*$"
                 title="Name should start with a capital letter, with only lowercase letters following, and be 2-15 characters long."
                 required
               />

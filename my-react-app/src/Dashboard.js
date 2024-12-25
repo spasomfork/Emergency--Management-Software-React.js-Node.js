@@ -158,6 +158,7 @@ const Dashboard = () => {
                   type="text"
                   placeholder="Enter city/town..."
                   onChange={(e) => setSearch(e.target.value)}
+                  style={{ marginRight: '10px' } }
                 />
                 <button className="btn btn-primary mt-2" onClick={searchPressed}>
                   Search
